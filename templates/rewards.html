@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href="/static/zui.min.css" rel="stylesheet">
+    <link href="/static/zui.datagrid.min.css" rel="stylesheet">
+</head>
+<body>
+<script src="/static/jquery.js"></script>
+<script src="/static/zui.min.js"></script>
+<script src="/static/zui.datagrid.min.js"></script>
+<div id="remotereward" class="datagrid"></div>
+<script>
+    $('#remotereward').datagrid({
+        dataSource: {
+            cols: [
+                {name: 'studentid', label: '学号', width: 0.3},
+                {name: 'reward', label: '奖励类型', width: 0.3},
+                {name: 'recdate', label: '奖励日期', width: 0.3},
+            ],
+            remote: function () {
+                return {
+                    url: '/rewarddata',
+                    type: 'GET',
+                    dataType: 'json'
+                };
+            }
+        }
+    });
+</script>
+</body>
+</html>
