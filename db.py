@@ -17,3 +17,6 @@ def gettable(database, table, colsNamesInJson):
         return datas
     except:
         return [{'Error': True}]
+
+
+def settable(database, table, coldname, value):

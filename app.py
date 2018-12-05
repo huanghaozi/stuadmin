@@ -3,26 +3,26 @@ from flask import Flask, render_template, redirect, session, request
 import pymysql, json, db
 import datetime
 
-app = Flask(__name__)
+app = Flask(__name__);
 
-app.secret_key = 'littlepossiblilitytobecracked'
-database = pymysql.connect("localhost", "root", "123456", "stuadmin")
+app.secret_key = 'littlepossiblilitytobecracked';
+database = pymysql.connect("localhost", "root", "123456", "stuadmin");
 
 
 class dateJsonEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, datetime.datetime):
-            return obj.strftime('%Y-%m-%d %H:%M:%S')
+            return obj.strftime('%Y-%m-%d %H:%M:%S');
         elif isinstance(obj, datetime.date):
-            return obj.strftime("%Y-%m-%d")
+            return obj.strftime("%Y-%m-%d");
         else:
-            return json.JSONEncoder.default(self, obj)
+            return json.JSONEncoder.default(self, obj);
 
 
 # ---------------错误处理---------------
 @app.errorhandler(404)
 def miss(e):
-    return render_template('404.html'), 404
+    return render_template('404.html'), 404;
 
 
 @app.errorhandler(500)
