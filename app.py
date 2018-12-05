@@ -121,7 +121,7 @@ def punish():
 @app.route('/depadata', methods=['GET'], endpoint='depadata')
 @auth
 def depadata():
-    datas = db.gettable(database, 'department', ['departid', 'departname', 'departhead', 'telephone'])
+    datas = db.getTable(database, 'department', ['departid', 'departname', 'departhead', 'telephone'])
     return json.dumps({"result": "success", "data": datas, "message": "未知错误",
                        "pager": {"page": 1, "recTotal": 1001, "recPerPage": 10}})
 
@@ -129,7 +129,7 @@ def depadata():
 @app.route('/classdata', methods=['GET'], endpoint='classdata')
 @auth
 def classdata():
-    datas = db.gettable(database, 'class', ['classid', 'classname', 'departid', 'begindate', 'master', 'mastertel'])
+    datas = db.getTable(database, 'class', ['classid', 'classname', 'departid', 'begindate', 'master', 'mastertel'])
     return json.dumps({"result": "success", "data": datas, "message": "未知错误",
                        "pager": {"page": 1, "recTotal": 1001, "recPerPage": 10}}, cls=dateJsonEncoder)
 
@@ -137,7 +137,7 @@ def classdata():
 @app.route('/studata', methods=['GET'], endpoint='studata')
 @auth
 def studata():
-    datas = db.gettable(database, 'student', ['studentid', 'name', 'sex', 'classid', 'birthday', 'native'])
+    datas = db.getTable(database, 'student', ['studentid', 'name', 'sex', 'classid', 'birthday', 'native'])
     return json.dumps({"result": "success", "data": datas, "message": "未知错误",
                        "pager": {"page": 1, "recTotal": 1001, "recPerPage": 10}}, cls=dateJsonEncoder)
 
@@ -145,7 +145,7 @@ def studata():
 @app.route('/changedata', methods=['GET'], endpoint='changedata')
 @auth
 def changedata():
-    datas = db.gettable(database, 'changes', ['cid', 'changess', 'recdate', 'studentid'])
+    datas = db.getTable(database, 'changes', ['cid', 'changess', 'recdate', 'studentid'])
     return json.dumps({"result": "success", "data": datas, "message": "未知错误",
                        "pager": {"page": 1, "recTotal": 1001, "recPerPage": 10}}, cls=dateJsonEncoder)
 
@@ -153,7 +153,7 @@ def changedata():
 @app.route('/rewarddata', methods=['GET'], endpoint='rewarddata')
 @auth
 def rewarddata():
-    datas = db.gettable(database, 'reward', ['rid', 'studentid', 'reward', 'recdate'])
+    datas = db.getTable(database, 'reward', ['rid', 'studentid', 'reward', 'recdate'])
     return json.dumps({"result": "success", "data": datas, "message": "未知错误",
                        "pager": {"page": 1, "recTotal": 1001, "recPerPage": 10}}, cls=dateJsonEncoder)
 
@@ -161,7 +161,7 @@ def rewarddata():
 @app.route('/punishdata', methods=['GET'], endpoint='punishdata')
 @auth
 def punishdata():
-    datas = db.gettable(database, 'punish', ['pid', 'studentid', 'punish', 'recdate'])
+    datas = db.getTable(database, 'punish', ['pid', 'studentid', 'punish', 'recdate'])
     return json.dumps({"result": "success", "data": datas, "message": "未知错误",
                        "pager": {"page": 1, "recTotal": 1001, "recPerPage": 10}}, cls=dateJsonEncoder)
 

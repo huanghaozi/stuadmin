@@ -1,4 +1,4 @@
-def gettable(database, table, colsNamesInJson):
+def getTable(database, table, colsNamesInJson):
     try:
         database.ping(reconnect=True)
         cursor = database.cursor()
@@ -19,4 +19,12 @@ def gettable(database, table, colsNamesInJson):
         return [{'Error': True}]
 
 
-def settable(database, table, coldname, value):
+def insertTable(database, tablesAndcols, values):
+    try:
+        database.ping(reconnect=True)
+        cursor = database.cursor()
+        cursor.execute("insert into %s value %s" % (tablesAndcols, values))
+        cursor.close()
+        return True
+    except:
+        return False
