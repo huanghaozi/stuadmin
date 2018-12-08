@@ -59,12 +59,18 @@
     </div>
     <div class="row">
         <div class="col-md-12">
-            <div id="remote" class="datagrid"></div>
+            <div id="remote" class="datagrid">
+                <div class="datagrid-container"></div>
+                <div class="pager"></div>
+            </div>
         </div>
     </div>
 </div>
 <script>
     $('#remote').datagrid({
+        states: {
+            pager: {page: 1}
+        },
         dataSource: {
             cols: [
                 {name: 'studentid', label: '学号', width: 0.3},

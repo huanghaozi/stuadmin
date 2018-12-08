@@ -1,12 +1,14 @@
 # -- coding:utf8 --
-from flask import Flask, render_template, redirect, session, request
+from flask import Flask, render_template, redirect, session, request, url_for
+from DBUtils import PooledDB
 import pymysql, json, db
 import datetime
 
-app = Flask(__name__);
+app = Flask(__name__)
 
-app.secret_key = 'littlepossiblilitytobecracked';
-database = pymysql.connect("localhost", "root", "123456", "stuadmin");
+app.secret_key = 'littlepossiblilitytobecracked'
+
+pool = PooledDB.PooledDB(pymysql, 50, host='localhost', user='root', passwd='123456', db='stuadmin', port=3306)
 
 
 class dateJsonEncoder(json.JSONEncoder):
@@ -28,9 +30,8 @@ def miss(e):
 @app.errorhandler(500)
 def error500(e):
     return render_template('500.html'), 500
-
-
 # ---------------end----------------
+
 def auth(func):
     def inner(*args, **kwargs):
         uname = session.get('username')
@@ -42,6 +43,15 @@ def auth(func):
 
     return inner
 
+
+@app.route('/fonts/zenicon.woff')
+def zenIconWoff():
+    return redirect('/static/fonts/zenicon.woff')
+
+
+@app.route('/fonts/zenicon.ttf')
+def zenIconTTF():
+    return redirect('/static/fonts/zenicon.ttf')
 
 @app.route('/', methods=['GET', 'POST'])
 def hello_world():
@@ -93,7 +103,6 @@ def change():
 def changesiframe():
     return render_template('changes.html')
 
-
 @app.route('/static/rewards.html', methods=['GET', 'POST'], endpoint='rewardsiframe')
 @auth
 def changesiframe():
@@ -121,49 +130,91 @@ def punish():
 @app.route('/depadata', methods=['GET'], endpoint='depadata')
 @auth
 def depadata():
-    datas = db.getTable(database, 'department', ['departid', 'departname', 'departhead', 'telephone'])
-    return json.dumps({"result": "success", "data": datas, "message": "未知错误",
-                       "pager": {"page": 1, "recTotal": 1001, "recPerPage": 10}})
+    datas = db.getTable(pool, 'department', ['departid', 'departname', 'departhead', 'telephone'])
+    page = int(request.args.get('page'))
+    recPerPage = int(request.args.get('recPerPage'))
+    sortBy = request.args.get('sortBy')
+    order = request.args.get('order')
+    recTotal = len(datas)
+    return json.dumps(
+        {"result": "success", "data": datas[(page - 1) * recPerPage:page * recPerPage - 1], "message": "未知错误",
+         "pager": {"page": page, "recTotal": recTotal, "recPerPage": recPerPage, "sortBy": sortBy, "order": order}},
+        cls=dateJsonEncoder)
 
 
 @app.route('/classdata', methods=['GET'], endpoint='classdata')
 @auth
 def classdata():
-    datas = db.getTable(database, 'class', ['classid', 'classname', 'departid', 'begindate', 'master', 'mastertel'])
-    return json.dumps({"result": "success", "data": datas, "message": "未知错误",
-                       "pager": {"page": 1, "recTotal": 1001, "recPerPage": 10}}, cls=dateJsonEncoder)
+    datas = db.getTable(pool, 'class', ['classid', 'classname', 'departid', 'begindate', 'master', 'mastertel'])
+    page = int(request.args.get('page'))
+    recPerPage = int(request.args.get('recPerPage'))
+    sortBy = request.args.get('sortBy')
+    order = request.args.get('order')
+    recTotal = len(datas)
+    return json.dumps(
+        {"result": "success", "data": datas[(page - 1) * recPerPage:page * recPerPage - 1], "message": "未知错误",
+         "pager": {"page": page, "recTotal": recTotal, "recPerPage": recPerPage, "sortBy": sortBy, "order": order}},
+        cls=dateJsonEncoder)
 
 
 @app.route('/studata', methods=['GET'], endpoint='studata')
 @auth
 def studata():
-    datas = db.getTable(database, 'student', ['studentid', 'name', 'sex', 'classid', 'birthday', 'native'])
-    return json.dumps({"result": "success", "data": datas, "message": "未知错误",
-                       "pager": {"page": 1, "recTotal": 1001, "recPerPage": 10}}, cls=dateJsonEncoder)
+    datas = db.getTable(pool, 'student', ['studentid', 'name', 'sex', 'classid', 'birthday', 'native'])
+    page = int(request.args.get('page'))
+    recPerPage = int(request.args.get('recPerPage'))
+    sortBy = request.args.get('sortBy')
+    order = request.args.get('order')
+    recTotal = len(datas)
+    return json.dumps(
+        {"result": "success", "data": datas[(page - 1) * recPerPage:page * recPerPage - 1], "message": "未知错误",
+         "pager": {"page": page, "recTotal": recTotal, "recPerPage": recPerPage, "sortBy": sortBy, "order": order}},
+        cls=dateJsonEncoder)
 
 
 @app.route('/changedata', methods=['GET'], endpoint='changedata')
 @auth
 def changedata():
-    datas = db.getTable(database, 'changes', ['cid', 'changess', 'recdate', 'studentid'])
-    return json.dumps({"result": "success", "data": datas, "message": "未知错误",
-                       "pager": {"page": 1, "recTotal": 1001, "recPerPage": 10}}, cls=dateJsonEncoder)
+    datas = db.getTable(pool, 'changes', ['cid', 'changess', 'recdate', 'studentid'])
+    page = int(request.args.get('page'))
+    recPerPage = int(request.args.get('recPerPage'))
+    sortBy = request.args.get('sortBy')
+    order = request.args.get('order')
+    recTotal = len(datas)
+    return json.dumps(
+        {"result": "success", "data": datas[(page - 1) * recPerPage:page * recPerPage - 1], "message": "未知错误",
+         "pager": {"page": page, "recTotal": recTotal, "recPerPage": recPerPage, "sortBy": sortBy, "order": order}},
+        cls=dateJsonEncoder)
 
 
 @app.route('/rewarddata', methods=['GET'], endpoint='rewarddata')
 @auth
 def rewarddata():
-    datas = db.getTable(database, 'reward', ['rid', 'studentid', 'reward', 'recdate'])
-    return json.dumps({"result": "success", "data": datas, "message": "未知错误",
-                       "pager": {"page": 1, "recTotal": 1001, "recPerPage": 10}}, cls=dateJsonEncoder)
+    datas = db.getTable(pool, 'reward', ['rid', 'studentid', 'reward', 'recdate'])
+    page = int(request.args.get('page'))
+    recPerPage = int(request.args.get('recPerPage'))
+    sortBy = request.args.get('sortBy')
+    order = request.args.get('order')
+    recTotal = len(datas)
+    return json.dumps(
+        {"result": "success", "data": datas[(page - 1) * recPerPage:page * recPerPage - 1], "message": "未知错误",
+         "pager": {"page": page, "recTotal": recTotal, "recPerPage": recPerPage, "sortBy": sortBy, "order": order}},
+        cls=dateJsonEncoder)
 
 
 @app.route('/punishdata', methods=['GET'], endpoint='punishdata')
 @auth
 def punishdata():
-    datas = db.getTable(database, 'punish', ['pid', 'studentid', 'punish', 'recdate'])
-    return json.dumps({"result": "success", "data": datas, "message": "未知错误",
-                       "pager": {"page": 1, "recTotal": 1001, "recPerPage": 10}}, cls=dateJsonEncoder)
+    datas = db.getTable(pool, 'punish', ['pid', 'studentid', 'punish', 'recdate'])
+    page = int(request.args.get('page'))
+    recPerPage = int(request.args.get('recPerPage'))
+    sortBy = request.args.get('sortBy')
+    order = request.args.get('order')
+    recTotal = len(datas)
+    return json.dumps(
+        {"result": "success", "data": datas[(page - 1) * recPerPage:page * recPerPage - 1], "message": "未知错误",
+         "pager": {"page": page, "recTotal": recTotal, "recPerPage": recPerPage, "sortBy": sortBy, "order": order}},
+        cls=dateJsonEncoder)
 
 
 if __name__ == '__main__':

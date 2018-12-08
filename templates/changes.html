@@ -10,9 +10,15 @@
 <script src="/static/jquery.js"></script>
 <script src="/static/zui.min.js"></script>
 <script src="/static/zui.datagrid.min.js"></script>
-<div id="remotechange" class="datagrid"></div>
+<div id="remotechange" class="datagrid">
+    <div class="datagrid-container"></div>
+    <div class="pager"></div>
+</div>
 <script>
     $('#remotechange').datagrid({
+        states: {
+            pager: {page: 1}
+        },
         dataSource: {
             cols: [
                 {name: 'studentid', label: '学号', width: 0.3},

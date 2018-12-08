@@ -14,16 +14,16 @@
 <script src="/static/zui.datagrid.min.js"></script>
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-12" id="navig">
             <nav class="navbar" role="navigation">
                 <div class="container-fluid">
                     <div class="navbar-header">
                         <button type="button" class="navbar-toggle" data-toggle="collapse"
                                 data-target=".navbar-collapse-example">
                             <span class="sr-only">切换导航</span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
+                            <span class="navbar-inverse icon-bar"></span>
+                            <span class="navbar-inverse icon-bar"></span>
+                            <span class="navbar-inverse icon-bar"></span>
                         </button>
                         <a class="navbar-brand" href="/change">学籍变更</a>
                     </div>
@@ -60,12 +60,18 @@
     <div class="row">
         <div class="col-md-6"></div>
         <div class="col-md-6">
-            <div id="remote" class="datagrid"></div>
+            <div id="remote" class="datagrid">
+                <div class="datagrid-container"></div>
+                <div class="pager"></div>
+            </div>
         </div>
     </div>
 </div>
 <script>
     $('#remote').datagrid({
+        states: {
+            pager: {page: 1}
+        },
         dataSource: {
             cols: [
                 {name: 'studentid', label: '学号', width: 0.3},
@@ -79,7 +85,8 @@
                     dataType: 'json'
                 };
             }
-        }
+        },
+        height: window.innerHeight - document.getElementById("navig").clientHeight
     });
 </script>
 </body>

@@ -1,5 +1,6 @@
-def getTable(database, table, colsNamesInJson):
+def getTable(pool, table, colsNamesInJson):
     try:
+        database = pool.connection()
         database.ping(reconnect=True)
         cursor = database.cursor()
         datas = []
@@ -8,6 +9,7 @@ def getTable(database, table, colsNamesInJson):
         cursor.execute("select * from %s;" % (table))
         results = cursor.fetchall()
         cursor.close()
+        database.close()
         if not results:
             return {'Empty': True}
         for i in range(len(results)):
@@ -19,12 +21,14 @@ def getTable(database, table, colsNamesInJson):
         return [{'Error': True}]
 
 
-def insertTable(database, tablesAndcols, values):
+def insertTable(pool, tablesAndcols, values):
     try:
+        database = pool.connection()
         database.ping(reconnect=True)
         cursor = database.cursor()
         cursor.execute("insert into %s value %s" % (tablesAndcols, values))
         cursor.close()
+        database.close()
         return True
     except:
         return False
