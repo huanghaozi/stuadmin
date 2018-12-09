@@ -14,7 +14,7 @@
 <script src="/static/zui.datagrid.min.js"></script>
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-12" id="navig">
             <nav class="navbar" role="navigation">
                 <div class="container-fluid">
                     <div class="navbar-header">
@@ -84,7 +84,8 @@
                     dataType: 'json'
                 };
             }
-        }
+        },
+        height: window.innerHeight - document.getElementById("navig").clientHeight - 77,
     });
 </script>
 </body>
