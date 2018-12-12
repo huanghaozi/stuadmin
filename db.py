@@ -1,4 +1,4 @@
-def getTable(pool, table, colsNamesInJson):
+def getTable(pool, table, colsNamesInJson, sortBy='', order=''):
     try:
         database = pool.connection()
         database.ping(reconnect=True)
@@ -6,7 +6,13 @@ def getTable(pool, table, colsNamesInJson):
         datas = []
         data = {}
         m = len(colsNamesInJson)
-        cursor.execute("select * from %s;" % (table))
+        if sortBy != '':
+            if order != '':
+                cursor.execute("select * from %s order by %s %s;" % (table, sortBy, order))
+            else:
+                cursor.execute("select * from %s order by %s asc;" % (table, sortBy))
+        else:
+            cursor.execute("select * from %s;" % (table))
         results = cursor.fetchall()
         cursor.close()
         database.close()
@@ -15,7 +21,7 @@ def getTable(pool, table, colsNamesInJson):
         for i in range(len(results)):
             for j in range(m):
                 data[colsNamesInJson[j]] = results[i][j]
-            datas.append(data)
+            datas.append(data.copy())
         return datas
     except:
         return [{'Error': True}]

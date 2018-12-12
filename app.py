@@ -123,25 +123,26 @@ def punish():
 @app.route('/depadata', methods=['GET'], endpoint='depadata')
 @auth
 def depadata():
-    datas = db.getTable(pool, 'department', ['departid', 'departname', 'departhead', 'telephone'])
-    page = int(request.args.get('page'))
-    recPerPage = int(request.args.get('recPerPage'))
     sortBy = request.args.get('sortBy')
     order = request.args.get('order')
+    datas = db.getTable(pool, 'department', ['departid', 'departname', 'departhead', 'telephone'], sortBy, order)
+    page = int(request.args.get('page'))
+    recPerPage = int(request.args.get('recPerPage'))
     recTotal = len(datas)
     return json.dumps(
         {"result": "success", "data": datas[(page - 1) * recPerPage:page * recPerPage - 1], "message": "未知错误",
-         "pager": {"page": page, "recTotal": recTotal, "recPerPage": recPerPage, "sortBy": sortBy, "order": order}},
+         "pager": {"page": page, "recTotal": recTotal, "recPerPage": recPerPage}},
         cls=dateJsonEncoder)
 
 @app.route('/classdata', methods=['GET'], endpoint='classdata')
 @auth
 def classdata():
-    datas = db.getTable(pool, 'class', ['classid', 'classname', 'departid', 'begindate', 'master', 'mastertel'])
-    page = int(request.args.get('page'))
-    recPerPage = int(request.args.get('recPerPage'))
     sortBy = request.args.get('sortBy')
     order = request.args.get('order')
+    datas = db.getTable(pool, 'class', ['classid', 'classname', 'departid', 'begindate', 'master', 'mastertel'], sortBy,
+                        order)
+    page = int(request.args.get('page'))
+    recPerPage = int(request.args.get('recPerPage'))
     recTotal = len(datas)
     return json.dumps(
         {"result": "success", "data": datas[(page - 1) * recPerPage:page * recPerPage - 1], "message": "未知错误",
@@ -151,11 +152,11 @@ def classdata():
 @app.route('/studata', methods=['GET'], endpoint='studata')
 @auth
 def studata():
-    datas = db.getTable(pool, 'student', ['studentid', 'name', 'sex', 'classid', 'birthday', 'native'])
-    page = int(request.args.get('page'))
-    recPerPage = int(request.args.get('recPerPage'))
     sortBy = request.args.get('sortBy')
     order = request.args.get('order')
+    datas = db.getTable(pool, 'student', ['studentid', 'name', 'sex', 'classid', 'birthday', 'native'], sortBy, order)
+    page = int(request.args.get('page'))
+    recPerPage = int(request.args.get('recPerPage'))
     recTotal = len(datas)
     return json.dumps(
         {"result": "success", "data": datas[(page - 1) * recPerPage:page * recPerPage - 1], "message": "未知错误",
@@ -165,11 +166,11 @@ def studata():
 @app.route('/changedata', methods=['GET'], endpoint='changedata')
 @auth
 def changedata():
-    datas = db.getTable(pool, 'changes', ['cid', 'changess', 'recdate', 'studentid'])
-    page = int(request.args.get('page'))
-    recPerPage = int(request.args.get('recPerPage'))
     sortBy = request.args.get('sortBy')
     order = request.args.get('order')
+    datas = db.getTable(pool, 'changes', ['cid', 'changess', 'recdate', 'studentid'], sortBy, order)
+    page = int(request.args.get('page'))
+    recPerPage = int(request.args.get('recPerPage'))
     recTotal = len(datas)
     return json.dumps(
         {"result": "success", "data": datas[(page - 1) * recPerPage:page * recPerPage - 1], "message": "未知错误",
@@ -179,11 +180,11 @@ def changedata():
 @app.route('/rewarddata', methods=['GET'], endpoint='rewarddata')
 @auth
 def rewarddata():
-    datas = db.getTable(pool, 'reward', ['rid', 'studentid', 'reward', 'recdate'])
-    page = int(request.args.get('page'))
-    recPerPage = int(request.args.get('recPerPage'))
     sortBy = request.args.get('sortBy')
     order = request.args.get('order')
+    datas = db.getTable(pool, 'reward', ['rid', 'studentid', 'reward', 'recdate'], sortBy, order)
+    page = int(request.args.get('page'))
+    recPerPage = int(request.args.get('recPerPage'))
     recTotal = len(datas)
     return json.dumps(
         {"result": "success", "data": datas[(page - 1) * recPerPage:page * recPerPage - 1], "message": "未知错误",
@@ -193,11 +194,11 @@ def rewarddata():
 @app.route('/punishdata', methods=['GET'], endpoint='punishdata')
 @auth
 def punishdata():
-    datas = db.getTable(pool, 'punish', ['pid', 'studentid', 'punish', 'recdate'])
-    page = int(request.args.get('page'))
-    recPerPage = int(request.args.get('recPerPage'))
     sortBy = request.args.get('sortBy')
     order = request.args.get('order')
+    datas = db.getTable(pool, 'punish', ['pid', 'studentid', 'punish', 'recdate'], sortBy, order)
+    page = int(request.args.get('page'))
+    recPerPage = int(request.args.get('recPerPage'))
     recTotal = len(datas)
     return json.dumps(
         {"result": "success", "data": datas[(page - 1) * recPerPage:page * recPerPage - 1], "message": "未知错误",
