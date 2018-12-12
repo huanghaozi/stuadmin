@@ -1,31 +1,26 @@
 # -- coding:utf8 --
-from flask import Flask, render_template, redirect, session, request, url_for
+from flask import Flask, render_template, redirect, session, request
 from DBUtils import PooledDB
 import pymysql, json, db
 import datetime
 
 app = Flask(__name__)
-
 app.secret_key = 'littlepossiblilitytobecracked'
-
 pool = PooledDB.PooledDB(pymysql, 50, host='localhost', user='root', passwd='123456', db='stuadmin', port=3306)
-
 
 class dateJsonEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, datetime.datetime):
-            return obj.strftime('%Y-%m-%d %H:%M:%S');
+            return obj.strftime('%Y-%m-%d %H:%M:%S')
         elif isinstance(obj, datetime.date):
-            return obj.strftime("%Y-%m-%d");
+            return obj.strftime("%Y-%m-%d")
         else:
-            return json.JSONEncoder.default(self, obj);
-
+            return json.JSONEncoder.default(self, obj)
 
 # ---------------错误处理---------------
 @app.errorhandler(404)
 def miss(e):
-    return render_template('404.html'), 404;
-
+    return render_template('404.html'), 404
 
 @app.errorhandler(500)
 def error500(e):
@@ -43,15 +38,23 @@ def auth(func):
 
     return inner
 
-
 @app.route('/fonts/zenicon.woff')
 def zenIconWoff():
     return redirect('/static/fonts/zenicon.woff')
 
-
 @app.route('/fonts/zenicon.ttf')
 def zenIconTTF():
     return redirect('/static/fonts/zenicon.ttf')
+
+
+@app.route('/fonts/zenicon.eot')
+def zenIconEOT():
+    return redirect('/static/fonts/zenicon.eot')
+
+
+@app.route('/fonts/zenicon.svg')
+def zenIconSVG():
+    return redirect('/static/fonts/zenicon.svg')
 
 @app.route('/', methods=['GET', 'POST'])
 def hello_world():
@@ -67,36 +70,30 @@ def hello_world():
             return redirect('/department')
         return render_template('login.html', msg='用户名或密码错误')
 
-
 @app.route('/department', methods=['GET', 'POST'], endpoint='department')
 @auth
 def department():
     return render_template('department.html')
-
 
 @app.route('/class', methods=['GET', 'POST'], endpoint='classes')
 @auth
 def classes():
     return render_template('class.html')
 
-
 @app.route('/student', methods=['GET', 'POST'], endpoint='student')
 @auth
 def student():
     return render_template('student.html')
-
 
 @app.route('/search', methods=['GET', 'POST'], endpoint='search')
 @auth
 def search():
     return render_template('search.html')
 
-
 @app.route('/change', methods=['GET', 'POST'], endpoint='change')
 @auth
 def change():
     return render_template('change.html')
-
 
 @app.route('/static/changes.html', methods=['GET', 'POST'], endpoint='changesiframe')
 @auth
@@ -108,24 +105,20 @@ def changesiframe():
 def changesiframe():
     return render_template('rewards.html')
 
-
 @app.route('/static/punishes.html', methods=['GET', 'POST'], endpoint='punishesiframe')
 @auth
 def changesiframe():
     return render_template('punishes.html')
-
 
 @app.route('/reward', methods=['GET', 'POST'], endpoint='reward')
 @auth
 def reward():
     return render_template('reward.html')
 
-
 @app.route('/punish', methods=['GET', 'POST'], endpoint='punish')
 @auth
 def punish():
     return render_template('punish.html')
-
 
 @app.route('/depadata', methods=['GET'], endpoint='depadata')
 @auth
@@ -141,7 +134,6 @@ def depadata():
          "pager": {"page": page, "recTotal": recTotal, "recPerPage": recPerPage, "sortBy": sortBy, "order": order}},
         cls=dateJsonEncoder)
 
-
 @app.route('/classdata', methods=['GET'], endpoint='classdata')
 @auth
 def classdata():
@@ -155,7 +147,6 @@ def classdata():
         {"result": "success", "data": datas[(page - 1) * recPerPage:page * recPerPage - 1], "message": "未知错误",
          "pager": {"page": page, "recTotal": recTotal, "recPerPage": recPerPage, "sortBy": sortBy, "order": order}},
         cls=dateJsonEncoder)
-
 
 @app.route('/studata', methods=['GET'], endpoint='studata')
 @auth
@@ -171,7 +162,6 @@ def studata():
          "pager": {"page": page, "recTotal": recTotal, "recPerPage": recPerPage, "sortBy": sortBy, "order": order}},
         cls=dateJsonEncoder)
 
-
 @app.route('/changedata', methods=['GET'], endpoint='changedata')
 @auth
 def changedata():
@@ -185,7 +175,6 @@ def changedata():
         {"result": "success", "data": datas[(page - 1) * recPerPage:page * recPerPage - 1], "message": "未知错误",
          "pager": {"page": page, "recTotal": recTotal, "recPerPage": recPerPage, "sortBy": sortBy, "order": order}},
         cls=dateJsonEncoder)
-
 
 @app.route('/rewarddata', methods=['GET'], endpoint='rewarddata')
 @auth
@@ -201,7 +190,6 @@ def rewarddata():
          "pager": {"page": page, "recTotal": recTotal, "recPerPage": recPerPage, "sortBy": sortBy, "order": order}},
         cls=dateJsonEncoder)
 
-
 @app.route('/punishdata', methods=['GET'], endpoint='punishdata')
 @auth
 def punishdata():
@@ -215,7 +203,6 @@ def punishdata():
         {"result": "success", "data": datas[(page - 1) * recPerPage:page * recPerPage - 1], "message": "未知错误",
          "pager": {"page": page, "recTotal": recTotal, "recPerPage": recPerPage, "sortBy": sortBy, "order": order}},
         cls=dateJsonEncoder)
-
 
 if __name__ == '__main__':
     app.run()

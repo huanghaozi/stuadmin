@@ -62,13 +62,12 @@
     <div class="row">
         <div class="col-md-6">
         </div>
-        <div class="col-md-6" id="tabCol" style="height:0px;padding-bottom:100%;">
-            <div class="tabs" id="searchTab"></div>
+        <div class="col-md-6">
+            <div class="tabs" id="searchTab" style="height:0px;padding-bottom: 100%"></div>
         </div>
     </div>
 </div>
 <script>
-    $('#tabCol').height(window.innerHeight - document.getElementById("navig").clientHeight);
     $('#searchTab').tabs({
         tabs: [{
             title: '学籍变更',
