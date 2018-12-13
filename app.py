@@ -35,7 +35,6 @@ def auth(func):
             return redirect('/')
         session['logged2pages'] = 'True'
         return func(*args, **kwargs)
-
     return inner
 
 @app.route('/fonts/zenicon.woff')
