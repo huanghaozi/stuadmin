@@ -12,6 +12,7 @@
 <script src="/static/jquery.js"></script>
 <script src="/static/zui.min.js"></script>
 <script src="/static/zui.datagrid.min.js"></script>
+<script src="/static/gaoliang.js"></script>
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12" id="navig">
@@ -60,6 +61,13 @@
     <div class="row">
         <div class="col-md-12">
             <div id="remote" class="datagrid">
+                <div class="input-control search-box search-box-circle has-icon-left has-icon-right"
+                     id="searchboxExample2" style="margin-bottom: 10px; max-width: 300px">
+                    <input id="inputSearchExample2" type="search" class="form-control search-input" placeholder="搜索">
+                    <label for="inputSearchExample2" class="input-control-icon-left search-icon"><i
+                            class="icon icon-search"></i></label>
+                    <a href="#" class="input-control-icon-right search-clear-btn"><i class="icon icon-remove"></i></a>
+                </div>
                 <div class="datagrid-container"></div>
                 <div class="pager"></div>
             </div>
@@ -85,12 +93,36 @@
                 };
             }
         },
-        height: window.innerHeight - document.getElementById("navig").clientHeight - 77,
+        height: window.innerHeight - document.getElementById("navig").clientHeight - 97,
         sortable: true,
         checkable: true,
         selectable: true,
         checkByClickRow: true,
     });
+    $("#inputSearchExample2").on("input propertychange",
+        function () {
+            var inputv = $("#inputSearchExample2").val();
+            $('.datagrid-cell-cell').GL
+            (
+                {
+                    ocolor: 'red',
+                    oshuru: inputv
+                }
+            );
+        }
+    );
+    $('#remote').on("onRender",
+        function () {
+            var inputv = $("#inputSearchExample2").val();
+            $('.datagrid-cell-cell').GL
+            (
+                {
+                    ocolor: 'red',
+                    oshuru: inputv
+                }
+            );
+        }
+    );
 </script>
 </body>
 </html>

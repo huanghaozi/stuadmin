@@ -6,15 +6,15 @@ def listDifference(big, small):
             ks.append(k)
     return ks.copy()
 
-
 def getTable(pool, table, colsNamesInJson, sortBy='', order='', search=''):
+    datas = []
+    data = {}
+    results = []
+    m = len(colsNamesInJson)
     try:
         database = pool.connection()
         database.ping(reconnect=True)
         cursor = database.cursor()
-        datas = []
-        data = {}
-        m = len(colsNamesInJson)
         if sortBy != '':
             if order != '':
                 cursor.execute("select * from %s order by %s %s;" % (table, sortBy, order))
@@ -36,15 +36,25 @@ def getTable(pool, table, colsNamesInJson, sortBy='', order='', search=''):
                         notinSearch.append(results[i])
             results = listDifference(results, notinSearch)
         if not results:
-            return {'Empty': True}
+            tt = []
+            for i in range(m):
+                tt.append('╮(－_－)╭')
+            results.append(tuple(tt))
         for i in range(len(results)):
             for j in range(m):
                 data[colsNamesInJson[j]] = results[i][j]
             datas.append(data.copy())
         return datas
     except:
-        return [{'Error': True}]
-
+        tt = []
+        for i in range(m):
+            tt.append('(>_<)')
+        results.append(tuple(tt))
+        for i in range(len(results)):
+            for j in range(m):
+                data[colsNamesInJson[j]] = results[i][j]
+            datas.append(data.copy())
+        return datas
 
 def insertTable(pool, tablesAndcols, values):
     try:

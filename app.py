@@ -140,8 +140,9 @@ def depadata():
 def classdata():
     sortBy = request.args.get('sortBy')
     order = request.args.get('order')
+    search = request.args.get('search')
     datas = db.getTable(pool, 'class', ['classid', 'classname', 'departid', 'begindate', 'master', 'mastertel'], sortBy,
-                        order)
+                        order, search)
     page = int(request.args.get('page'))
     recPerPage = int(request.args.get('recPerPage'))
     recTotal = len(datas)
@@ -155,7 +156,9 @@ def classdata():
 def studata():
     sortBy = request.args.get('sortBy')
     order = request.args.get('order')
-    datas = db.getTable(pool, 'student', ['studentid', 'name', 'sex', 'classid', 'birthday', 'native'], sortBy, order)
+    search = request.args.get('search')
+    datas = db.getTable(pool, 'student', ['studentid', 'name', 'sex', 'classid', 'birthday', 'native'], sortBy, order,
+                        search)
     page = int(request.args.get('page'))
     recPerPage = int(request.args.get('recPerPage'))
     recTotal = len(datas)
@@ -169,7 +172,8 @@ def studata():
 def changedata():
     sortBy = request.args.get('sortBy')
     order = request.args.get('order')
-    datas = db.getTable(pool, 'changes', ['cid', 'changess', 'recdate', 'studentid'], sortBy, order)
+    search = request.args.get('search')
+    datas = db.getTable(pool, 'changes', ['cid', 'changess', 'recdate', 'studentid'], sortBy, order, search)
     page = int(request.args.get('page'))
     recPerPage = int(request.args.get('recPerPage'))
     recTotal = len(datas)
@@ -183,7 +187,8 @@ def changedata():
 def rewarddata():
     sortBy = request.args.get('sortBy')
     order = request.args.get('order')
-    datas = db.getTable(pool, 'reward', ['rid', 'studentid', 'reward', 'recdate'], sortBy, order)
+    search = request.args.get('search')
+    datas = db.getTable(pool, 'reward', ['rid', 'studentid', 'reward', 'recdate'], sortBy, order, search)
     page = int(request.args.get('page'))
     recPerPage = int(request.args.get('recPerPage'))
     recTotal = len(datas)
@@ -197,7 +202,8 @@ def rewarddata():
 def punishdata():
     sortBy = request.args.get('sortBy')
     order = request.args.get('order')
-    datas = db.getTable(pool, 'punish', ['pid', 'studentid', 'punish', 'recdate'], sortBy, order)
+    search = request.args.get('search')
+    datas = db.getTable(pool, 'punish', ['pid', 'studentid', 'punish', 'recdate'], sortBy, order, search)
     page = int(request.args.get('page'))
     recPerPage = int(request.args.get('recPerPage'))
     recTotal = len(datas)

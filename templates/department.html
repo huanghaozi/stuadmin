@@ -12,6 +12,7 @@
 <script src="/static/jquery.js"></script>
 <script src="/static/zui.min.js"></script>
 <script src="/static/zui.datagrid.min.js"></script>
+<script src="/static/gaoliang.js"></script>
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12" id="navig">
@@ -93,14 +94,37 @@
                 };
             }
         },
-        renderDelay: 100,
-        height: window.innerHeight - document.getElementById("navig").clientHeight - 77,
+        height: window.innerHeight - document.getElementById("navig").clientHeight - 97,
         sortable: true,
         checkable: true,
         checkByClickRow: true,
         selectable: true,
         hoverCell: true,
     });
+    $("#inputSearchExample2").on("input propertychange",
+        function () {
+            var inputv = $("#inputSearchExample2").val();
+            $('.datagrid-cell-cell').GL
+            (
+                {
+                    ocolor: 'red',
+                    oshuru: inputv
+                }
+            );
+        }
+    );
+    $('#remote').on("onRender",
+        function () {
+            var inputv = $("#inputSearchExample2").val();
+            $('.datagrid-cell-cell').GL
+            (
+                {
+                    ocolor: 'red',
+                    oshuru: inputv
+                }
+            );
+        }
+    );
 </script>
 </body>
 </html>
