@@ -1,4 +1,13 @@
-def getTable(pool, table, colsNamesInJson, sortBy='', order=''):
+def listDifference(big, small):
+    k = ''
+    ks = []
+    for k in big:
+        if not k in small:
+            ks.append(k)
+    return ks.copy()
+
+
+def getTable(pool, table, colsNamesInJson, sortBy='', order='', search=''):
     try:
         database = pool.connection()
         database.ping(reconnect=True)
@@ -16,6 +25,16 @@ def getTable(pool, table, colsNamesInJson, sortBy='', order=''):
         results = cursor.fetchall()
         cursor.close()
         database.close()
+        if search != None:
+            notinSearch = []
+            for i in range(len(results)):
+                counts = 0
+                for j in range(len(results[i])):
+                    if str(results[i][j]).find(search) == -1:
+                        counts += 1
+                    if counts == len(results[i]):
+                        notinSearch.append(results[i])
+            results = listDifference(results, notinSearch)
         if not results:
             return {'Empty': True}
         for i in range(len(results)):

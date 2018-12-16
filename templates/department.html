@@ -61,7 +61,7 @@
         <div class="col-md-12">
             <div id="remote" class="datagrid">
                 <div class="input-control search-box search-box-circle has-icon-left has-icon-right"
-                     id="searchboxExample2" style="margin-bottom: 10px; max-width: 300px;">
+                     id="searchboxExample2" style="margin-bottom: 10px; max-width: 300px">
                     <input id="inputSearchExample2" type="search" class="form-control search-input" placeholder="搜索">
                     <label for="inputSearchExample2" class="input-control-icon-left search-icon"><i
                             class="icon icon-search"></i></label>
@@ -76,7 +76,7 @@
 <script>
     $('#remote').datagrid({
         states: {
-            pager: {page: 1}
+            pager: {page: 1},
         },
         dataSource: {
             cols: [
@@ -101,13 +101,6 @@
         selectable: true,
         hoverCell: true,
     });
-    $('#remote').on('onLoad', function (event, result) {
-        if (result === false) {
-            console.log('数据加载失败。');
-        }
-    });
-    var remote = $('#remote').data('zui.datagrid');
-    remote.renderLoading('正在努力获取数据...');
 </script>
 </body>
 </html>

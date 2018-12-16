@@ -124,7 +124,9 @@ def punish():
 def depadata():
     sortBy = request.args.get('sortBy')
     order = request.args.get('order')
-    datas = db.getTable(pool, 'department', ['departid', 'departname', 'departhead', 'telephone'], sortBy, order)
+    search = request.args.get('search')
+    datas = db.getTable(pool, 'department', ['departid', 'departname', 'departhead', 'telephone'], sortBy, order,
+                        search)
     page = int(request.args.get('page'))
     recPerPage = int(request.args.get('recPerPage'))
     recTotal = len(datas)
