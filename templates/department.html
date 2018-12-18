@@ -13,6 +13,7 @@
 <script src="/static/zui.min.js"></script>
 <script src="/static/zui.datagrid.min.js"></script>
 <script src="/static/gaoliang.js"></script>
+<script src="/static/zui.selectable.min.js"></script>
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12" id="navig">
@@ -61,12 +62,31 @@
     <div class="row">
         <div class="col-md-12">
             <div id="remote" class="datagrid">
-                <div class="input-control search-box search-box-circle has-icon-left has-icon-right"
-                     id="searchboxExample2" style="margin-bottom: 10px; max-width: 300px">
-                    <input id="inputSearchExample2" type="search" class="form-control search-input" placeholder="搜索">
-                    <label for="inputSearchExample2" class="input-control-icon-left search-icon"><i
-                            class="icon icon-search"></i></label>
-                    <a href="#" class="input-control-icon-right search-clear-btn"><i class="icon icon-remove"></i></a>
+                <div class="collapse navbar-collapse navbar-collapse-example">
+                    <ul class="nav navbar-nav">
+                        <li>
+                            <button id="insert" type="button" class="btn btn-primary btn-block">插入</button>
+                        </li>
+                        <li>
+                            <button id="modify" type="button" class="btn btn-primary btn-block">修改</button>
+                        </li>
+                        <li>
+                            <button id="refresh" type="button" class="btn btn-primary btn-block">刷新</button>
+                        </li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <div class="input-control search-box search-box-circle has-icon-left has-icon-right"
+                                 id="searchboxExample2" style="margin-bottom: 10px; max-width: 300px">
+                                <input id="inputSearchExample2" type="search" class="form-control search-input"
+                                       placeholder="搜索">
+                                <label for="inputSearchExample2" class="input-control-icon-left search-icon"><i
+                                        class="icon icon-search"></i></label>
+                                <a href="#" class="input-control-icon-right search-clear-btn"><i
+                                        class="icon icon-remove"></i></a>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
                 <div class="datagrid-container"></div>
                 <div class="pager"></div>
@@ -74,11 +94,95 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="insertDialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form class="form-horizontal" action="/department" method="post">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span
+                            class="sr-only">关闭</span></button>
+                    <h4 class="modal-title">插入数据</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="dvvc">
+                        <h5>对照</h5>
+                        <div id="selectedRows" class="datagrid"></div>
+                        <hr>
+                    </div>
+                    <div class="collapse navbar-collapse">
+                        <ul class="nav navbar-nav navbar-left">
+                            <li><h5>新行</h5></li>
+                        </ul>
+                        <ul class="nav navbar-nav navbar-right">
+                            <li>
+                                <button id="addLine" type="button" class="btn btn-primary">Add</button>
+                            </li>
+                        </ul>
+                    </div>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>院系编号</th>
+                            <th>院系名称</th>
+                            <th>负责人</th>
+                            <th>电话</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody id="addtable">
+                        <tr>
+                            <td>1</td>
+                            <td><input name="newdepanum1" placeholder="院系编号" class="form-control"><label
+                                    for="newdepanum1"></label></td>
+                            <td><input name="newdepaname1" placeholder="院系名称" class="form-control"><label
+                                    for="newdepaname1"></label></td>
+                            <td><input name="newhead1" placeholder="负责人" class="form-control"><label
+                                    for="newhead1"></label></td>
+                            <td><input name="newtele1" placeholder="电话" class="form-control"><label
+                                    for="newtele1"></label></td>
+                            <td><a href="" id="delete1" class="text-danger"><i class="icon-trash"></i></a></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">插入</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 <script>
+    var depadatasource = {
+        cols: [
+            {name: 'departid', label: '院系编号', width: 0.1},
+            {name: 'departname', label: '院系名称', width: 0.4},
+            {name: 'departhead', label: '负责人', width: 0.2},
+            {name: 'telephone', label: '电话', width: 0.4}
+        ],
+        remote: function () {
+            return {
+                url: '/depadata',
+                type: 'GET',
+                dataType: 'json'
+            };
+        }
+    };
     $('#remote').datagrid({
         states: {
             pager: {page: 1},
         },
+        dataSource: depadatasource,
+        height: window.innerHeight - document.getElementById("navig").clientHeight - 97,
+        sortable: true,
+        checkable: true,
+        checkByClickRow: true,
+        selectable: true,
+        hoverCell: true,
+    });
+    $('#selectedRows').datagrid({
         dataSource: {
             cols: [
                 {name: 'departid', label: '院系编号', width: 0.1},
@@ -86,20 +190,44 @@
                 {name: 'departhead', label: '负责人', width: 0.2},
                 {name: 'telephone', label: '电话', width: 0.4}
             ],
-            remote: function () {
-                return {
-                    url: '/depadata',
-                    type: 'GET',
-                    dataType: 'json'
-                };
-            }
+            array: []
         },
-        height: window.innerHeight - document.getElementById("navig").clientHeight - 97,
-        sortable: true,
-        checkable: true,
-        checkByClickRow: true,
-        selectable: true,
-        hoverCell: true,
+        height: window.innerHeight / 5
+    });
+
+    var remote = $('#remote').data('zui.datagrid');
+    var selectedRowsObj = $("#selectedRows").data('zui.datagrid');
+    var selectedRowsData = [];
+    var selectedRows;
+    $("#insert").click(function () {
+        selectedRowsData = remote.getCheckItems();
+        if (Array.isArray(selectedRowsData) && selectedRowsData.length === 0) {
+            $("#dvvc").hide();
+        }
+        else {
+            selectedRows = {
+                cols: [
+                    {name: 'departid', label: '院系编号', width: 0.1},
+                    {name: 'departname', label: '院系名称', width: 0.4},
+                    {name: 'departhead', label: '负责人', width: 0.2},
+                    {name: 'telephone', label: '电话', width: 0.4}
+                ],
+                array: selectedRowsData,
+            };
+            selectedRowsObj.setDataSource(selectedRows);
+            $("#dvvc").show();
+        }
+        $("#insertDialog").modal('toggle', 'center');
+    });
+    var newlinesNum = 1;
+    $("#addLine").click(function () {
+        newlinesNum += 1;
+        var tr = "<tr><td>" + newlinesNum.toString() + "</td><td><input name=\"newdepanum" + newlinesNum.toString() + "\" placeholder=\"院系编号\" class=\"form-control\"><label for=\"newdepanum" + newlinesNum.toString() + "\"></label></td><td><input name=\"newdepaname" + newlinesNum.toString() + "\" placeholder=\"院系名称\" class=\"form-control\"><label for=\"newdepaname" + newlinesNum.toString() + "\"></label></td> <td><input name=\"newhead" + newlinesNum.toString() + "\" placeholder=\"负责人\" class=\"form-control\"><label for=\"newhead" + newlinesNum.toString() + "\"></label></td> <td><input name=\"newtele" + newlinesNum.toString() + "\" placeholder=\"电话\" class=\"form-control\"><label for=\"newtele" + newlinesNum.toString() + "\"></label></td> <td><a href=\"\" name=\"delete" + newlinesNum.toString() + "\" class=\"text-danger\"><i class=\"icon-trash\"></i></a></td></tr>";
+        $('#addtable').append(tr);
+    });
+    $("#refresh").click(function () {
+        $('#inputSearchExample2').val("");
+        remote.render();
     });
     $("#inputSearchExample2").on("input propertychange",
         function () {
