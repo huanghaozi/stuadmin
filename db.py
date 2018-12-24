@@ -57,13 +57,38 @@ def getTable(pool, table, colsNamesInJson, sortBy='', order='', search=''):
         return datas
 
 def insertTable(pool, tablesAndcols, values):
+    str = "insert into %s value %s" % (tablesAndcols, values)
     try:
         database = pool.connection()
         database.ping(reconnect=True)
         cursor = database.cursor()
-        cursor.execute("insert into %s value %s" % (tablesAndcols, values))
+    except:
+        return False
+    try:
+        cursor.execute(str)
+        database.commit()
         cursor.close()
         database.close()
         return True
     except:
+        database.rollback()
+        return False
+
+
+def modifyTable(pool, tableName, setDatas, pjdrtnjm):
+    str = "update %s set %s where %s;" % (tableName, setDatas, pjdrtnjm)
+    try:
+        database = pool.connection()
+        database.ping(reconnect=True)
+        cursor = database.cursor()
+    except:
+        return False
+    try:
+        cursor.execute(str)
+        database.commit()
+        cursor.close()
+        database.close()
+        return True
+    except:
+        database.rollback()
         return False

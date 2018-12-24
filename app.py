@@ -72,7 +72,59 @@ def hello_world():
 @app.route('/department', methods=['GET', 'POST'], endpoint='department')
 @auth
 def department():
-    return render_template('department.html')
+    if request.method == 'GET':
+        return render_template('department.html')
+    else:
+        if request.form.get('posttype') == 'insert':
+            numi = request.form.get('numi')
+            newdepanum = []
+            newdepaname = []
+            newhead = []
+            newtele = []
+            newdatasets = "("
+            for i in range(int(numi)):
+                newdepanum.append(request.form.get('newdepanum' + str(i + 1)))
+                newdepaname.append(request.form.get('newdepaname' + str(i + 1)))
+                newhead.append(request.form.get('newhead' + str(i + 1)))
+                newtele.append(request.form.get('newtele' + str(i + 1)))
+            for i in range(int(numi)):
+                newdatasets += '"' + newdepanum[i] + '",'
+                newdatasets += '"' + newdepaname[i] + '",'
+                newdatasets += '"' + newhead[i] + '",'
+                newdatasets += '"' + newtele[i] + '"'
+                newdatasets += '),('
+            newdatasets = newdatasets[:-2] + ';'
+            insertsuccess = db.insertTable(pool, "department(departid,departname,departhead,telephone)", newdatasets)
+            if insertsuccess == True:
+                return render_template('department.html', inserterror="False")
+            else:
+                return render_template('department.html', inserterror="True")
+        elif request.form.get('posttype') == 'modify':
+            numj = request.form.get('numj')
+            k = 0
+            notmoddepartid = []
+            moddepartid = []
+            moddepartname = []
+            moddeparthead = []
+            modtelephone = []
+            for i in range(int(numj)):
+                notmoddepartid.append(request.form.get('departid' + str(i)))
+                moddepartid.append(request.form.get('moddepartid' + notmoddepartid[i]))
+                moddepartname.append(request.form.get('moddepartname' + notmoddepartid[i]))
+                moddeparthead.append(request.form.get('moddeparthead' + notmoddepartid[i]))
+                modtelephone.append(request.form.get('modtelephone' + notmoddepartid[i]))
+            for i in range(int(numj)):
+                modeddata = ""
+                modeddata += 'departid="' + moddepartid[i] + '"'
+                modeddata += ',departname="' + moddepartname[i] + '"'
+                modeddata += ',departhead="' + moddeparthead[i] + '"'
+                modeddata += ',telephone="' + modtelephone[i] + '"'
+                pjdr = 'departid="' + notmoddepartid[i] + '"'
+                modiifysuccess = db.modifyTable(pool, "department", modeddata, pjdr)
+                if (modiifysuccess == True):
+                    k += 1
+            return render_template('department.html', modifysuccessednum=str(k),
+                                   modifyunsuccessednum=str(int(numj) - k))
 
 @app.route('/class', methods=['GET', 'POST'], endpoint='classes')
 @auth
@@ -131,7 +183,7 @@ def depadata():
     recPerPage = int(request.args.get('recPerPage'))
     recTotal = len(datas)
     return json.dumps(
-        {"result": "success", "data": datas[(page - 1) * recPerPage:page * recPerPage - 1], "message": "未知错误",
+        {"result": "success", "data": datas[(page - 1) * recPerPage:page * recPerPage], "message": "未知错误",
          "pager": {"page": page, "recTotal": recTotal, "recPerPage": recPerPage}},
         cls=dateJsonEncoder)
 
@@ -147,7 +199,7 @@ def classdata():
     recPerPage = int(request.args.get('recPerPage'))
     recTotal = len(datas)
     return json.dumps(
-        {"result": "success", "data": datas[(page - 1) * recPerPage:page * recPerPage - 1], "message": "未知错误",
+        {"result": "success", "data": datas[(page - 1) * recPerPage:page * recPerPage], "message": "未知错误",
          "pager": {"page": page, "recTotal": recTotal, "recPerPage": recPerPage, "sortBy": sortBy, "order": order}},
         cls=dateJsonEncoder)
 
@@ -163,7 +215,7 @@ def studata():
     recPerPage = int(request.args.get('recPerPage'))
     recTotal = len(datas)
     return json.dumps(
-        {"result": "success", "data": datas[(page - 1) * recPerPage:page * recPerPage - 1], "message": "未知错误",
+        {"result": "success", "data": datas[(page - 1) * recPerPage:page * recPerPage], "message": "未知错误",
          "pager": {"page": page, "recTotal": recTotal, "recPerPage": recPerPage, "sortBy": sortBy, "order": order}},
         cls=dateJsonEncoder)
 
@@ -178,7 +230,7 @@ def changedata():
     recPerPage = int(request.args.get('recPerPage'))
     recTotal = len(datas)
     return json.dumps(
-        {"result": "success", "data": datas[(page - 1) * recPerPage:page * recPerPage - 1], "message": "未知错误",
+        {"result": "success", "data": datas[(page - 1) * recPerPage:page * recPerPage], "message": "未知错误",
          "pager": {"page": page, "recTotal": recTotal, "recPerPage": recPerPage, "sortBy": sortBy, "order": order}},
         cls=dateJsonEncoder)
 
@@ -193,7 +245,7 @@ def rewarddata():
     recPerPage = int(request.args.get('recPerPage'))
     recTotal = len(datas)
     return json.dumps(
-        {"result": "success", "data": datas[(page - 1) * recPerPage:page * recPerPage - 1], "message": "未知错误",
+        {"result": "success", "data": datas[(page - 1) * recPerPage:page * recPerPage], "message": "未知错误",
          "pager": {"page": page, "recTotal": recTotal, "recPerPage": recPerPage, "sortBy": sortBy, "order": order}},
         cls=dateJsonEncoder)
 
@@ -208,7 +260,7 @@ def punishdata():
     recPerPage = int(request.args.get('recPerPage'))
     recTotal = len(datas)
     return json.dumps(
-        {"result": "success", "data": datas[(page - 1) * recPerPage:page * recPerPage - 1], "message": "未知错误",
+        {"result": "success", "data": datas[(page - 1) * recPerPage:page * recPerPage], "message": "未知错误",
          "pager": {"page": page, "recTotal": recTotal, "recPerPage": recPerPage, "sortBy": sortBy, "order": order}},
         cls=dateJsonEncoder)
 
