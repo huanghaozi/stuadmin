@@ -121,10 +121,21 @@ def department():
                 modeddata += ',telephone="' + modtelephone[i] + '"'
                 pjdr = 'departid="' + notmoddepartid[i] + '"'
                 modiifysuccess = db.modifyTable(pool, "department", modeddata, pjdr)
-                if (modiifysuccess == True):
+                if modiifysuccess == True:
                     k += 1
             return render_template('department.html', modifysuccessednum=str(k),
                                    modifyunsuccessednum=str(int(numj) - k))
+        elif request.form.get('posttype') == 'delete':
+            numk = request.form.get('numk')
+            l = 0
+            strdeletedepartids = request.form.get('deletekeys')
+            deletedepartids = strdeletedepartids.split(' ')
+            for i in range(int(numk)):
+                deletesuccess = db.deletekeys(pool, 'department', "departid", '"' + deletedepartids[i] + '"')
+                if deletesuccess == True:
+                    l += 1
+            return render_template('department.html', deletesuccessednum=str(l),
+                                   deleteunsuccessednum=str(int(numk) - l))
 
 @app.route('/class', methods=['GET', 'POST'], endpoint='classes')
 @auth

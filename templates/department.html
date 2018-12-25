@@ -71,6 +71,9 @@
                             <button id="modify" type="button" class="btn btn-primary btn-block">修改</button>
                         </li>
                         <li>
+                            <button id="delete" type="button" class="btn btn-primary btn-block">删除</button>
+                        </li>
+                        <li>
                             <button id="refresh" type="button" class="btn btn-primary btn-block">刷新</button>
                         </li>
                     </ul>
@@ -192,6 +195,33 @@
     </div>
 </div>
 
+
+<div class="modal fade" id="deleteDialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form class="form-horizontal" action="/department" method="POST">
+                <input style="display: none;" id="numk" name="numk"><label for="numk"></label>
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span
+                            class="sr-only">关闭</span></button>
+                    <h4 class="modal-title">删除数据</h4>
+                </div>
+                <input style="display: none;" id="posttype3" name="posttype"><label for="posttype3"></label>
+                <input style="display: none;" id="deletekeys" name="deletekeys"><label for="deletekeys"></label>
+                <div class="modal-body">
+                    <div>
+                        <div id="selectedRows2" class="datagrid"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger">删除</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <script>
     {% if inserterror == "True" %}
         new $.zui.Messager('数据插入失败', {
@@ -207,8 +237,12 @@
     {% endif %}
     {% if modifysuccessednum %}
         new $.zui.Messager('{{ modifysuccessednum }} 条数据修改成功, {{ modifyunsuccessednum }} 条失败', {
+            close: false
+        }).show();
+    {% endif %}
+    {% if deletesuccessednum %}
+        new $.zui.Messager('{{ deletesuccessednum }} 条数据删除成功, {{ deleteunsuccessednum }} 条失败', {
             close: false,
-            type: 'success'
         }).show();
     {% endif %}
     var depadatasource = {
@@ -250,9 +284,22 @@
         },
         height: window.innerHeight / 5
     });
+    $('#selectedRows2').datagrid({
+        dataSource: {
+            cols: [
+                {name: 'departid', label: '院系编号', width: 0.1},
+                {name: 'departname', label: '院系名称', width: 0.4},
+                {name: 'departhead', label: '负责人', width: 0.2},
+                {name: 'telephone', label: '电话', width: 0.4}
+            ],
+            array: []
+        },
+        height: window.innerHeight / 5
+    });
 
     var remote = $('#remote').data('zui.datagrid');
     var selectedRowsObj = $("#selectedRows").data('zui.datagrid');
+    var selectedRowsObj2 = $("#selectedRows2").data('zui.datagrid');
     var selectedRowsData = [];
     var selectedRows;
     $("#insert").click(function () {
@@ -275,6 +322,35 @@
         }
         $('#posttype').val("insert");
         $("#insertDialog").modal('toggle', 'center');
+    });
+    $("#delete").click(function () {
+        selectedRowsData = remote.getCheckItems();
+        if (Array.isArray(selectedRowsData) && selectedRowsData.length === 0) {
+            new $.zui.Messager('未选择数据！', {
+                close: false,
+                type: 'danger'
+            }).show();
+        }
+        else {
+            var keys = "";
+            selectedRows = {
+                cols: [
+                    {name: 'departid', label: '院系编号', width: 0.1},
+                    {name: 'departname', label: '院系名称', width: 0.4},
+                    {name: 'departhead', label: '负责人', width: 0.2},
+                    {name: 'telephone', label: '电话', width: 0.4}
+                ],
+                array: selectedRowsData,
+            };
+            selectedRowsObj2.setDataSource(selectedRows);
+            $('#posttype3').val("delete");
+            $('#numk').val(selectedRowsData.length.toString());
+            for (var i = 0; i < selectedRowsData.length; i++) {
+                keys += selectedRowsData[i].departid + " ";
+            }
+            $('#deletekeys').val(keys);
+            $("#deleteDialog").modal('toggle', 'center');
+        }
     });
     $("#modify").click(function () {
         selectedRowsData = remote.getCheckItems();
@@ -299,7 +375,6 @@
             $('#numj').val(selectedRowsData.length.toString());
             $("#modifyDialog").modal('toggle', 'center');
         }
-
     });
     var newlinesNum = 1;
     $('#numi').val(newlinesNum.toString());

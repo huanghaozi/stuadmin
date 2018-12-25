@@ -92,3 +92,22 @@ def modifyTable(pool, tableName, setDatas, pjdrtnjm):
     except:
         database.rollback()
         return False
+
+
+def deletekeys(pool, tableName, keys, keystnjm):
+    str = "delete from %s where %s=%s" % (tableName, keys, keystnjm)
+    try:
+        database = pool.connection()
+        database.ping(reconnect=True)
+        cursor = database.cursor()
+    except:
+        return False
+    try:
+        cursor.execute(str)
+        database.commit()
+        cursor.close()
+        database.close()
+        return True
+    except:
+        database.rollback()
+        return False
