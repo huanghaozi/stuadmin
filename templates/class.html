@@ -13,6 +13,7 @@
 <script src="/static/zui.min.js"></script>
 <script src="/static/zui.datagrid.min.js"></script>
 <script src="/static/gaoliang.js"></script>
+<script src="/static/zui.selectable.min.js"></script>
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12" id="navig">
@@ -61,12 +62,34 @@
     <div class="row">
         <div class="col-md-12">
             <div id="remote" class="datagrid">
-                <div class="input-control search-box search-box-circle has-icon-left has-icon-right"
-                     id="searchboxExample2" style="margin-bottom: 10px; max-width: 300px">
-                    <input id="inputSearchExample2" type="search" class="form-control search-input" placeholder="搜索">
-                    <label for="inputSearchExample2" class="input-control-icon-left search-icon"><i
-                            class="icon icon-search"></i></label>
-                    <a href="#" class="input-control-icon-right search-clear-btn"><i class="icon icon-remove"></i></a>
+                <div class="navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li>
+                            <button id="insert" type="button" class="btn btn-primary btn-block">插入</button>
+                        </li>
+                        <li>
+                            <button id="modify" type="button" class="btn btn-info btn-block">修改</button>
+                        </li>
+                        <li>
+                            <button id="delete" type="button" class="btn btn-danger btn-block">删除</button>
+                        </li>
+                        <li>
+                            <button id="refresh" type="button" class="btn btn-success btn-block">刷新</button>
+                        </li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <div class="input-control search-box search-box-circle has-icon-left has-icon-right"
+                                 id="searchboxExample2" style="margin-bottom: 10px; max-width: 300px">
+                                <input id="inputSearchExample2" type="search" class="form-control search-input"
+                                       placeholder="搜索">
+                                <label for="inputSearchExample2" class="input-control-icon-left search-icon"><i
+                                        class="icon icon-search"></i></label>
+                                <a href="#" class="input-control-icon-right search-clear-btn"><i
+                                        class="icon icon-remove"></i></a>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
                 <div class="datagrid-container"></div>
                 <div class="pager"></div>
@@ -74,7 +97,159 @@
         </div>
     </div>
 </div>
+
+
+<div class="modal fade" id="insertDialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form class="form-horizontal" action="/class" method="POST">
+                <input style="display: none;" id="numi" name="numi">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span
+                            class="sr-only">关闭</span></button>
+                    <h4 class="modal-title">插入数据</h4>
+                </div>
+                <input style="display: none;" id="posttype" name="posttype">
+                <div class="modal-body">
+                    <div id="dvvc">
+                        <h5>对照</h5>
+                        <div id="selectedRows" class="datagrid"></div>
+                        <hr>
+                    </div>
+                    <div class="collapse navbar-collapse">
+                        <ul class="nav navbar-nav navbar-left">
+                            <li><h5>新行</h5></li>
+                        </ul>
+                        <ul class="nav navbar-nav navbar-right">
+                            <li>
+                                <button id="addLine" type="button" class="btn btn-primary">Add</button>
+                            </li>
+                        </ul>
+                    </div>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>班级编号</th>
+                            <th>班级名称</th>
+                            <th>所属院系</th>
+                            <th>成立日期</th>
+                            <th>班主任</th>
+                            <th>负责人电话</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody id="addtable">
+                        <tr>
+                            <td>1</td>
+                            <td><input name="newclassid1" placeholder="班级编号" class="form-control"></td>
+                            <td><input name="newclassname1" placeholder="班级名称" class="form-control"></td>
+                            <td><input name="newdepartid1" placeholder="所属院系" class="form-control"></td>
+                            <td><input name="newbegindate1" placeholder="成立日期" class="form-control"></td>
+                            <td><input name="newmaster1" placeholder="班主任" class="form-control"></td>
+                            <td><input name="newmastertel1" placeholder="负责人电话" class="form-control"></td>
+                            <td><a href="" id="delete1" class="text-danger"><i class="icon-trash"></i></a></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">插入</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modifyDialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form class="form-horizontal" action="/class" method="POST">
+                <input style="display: none;" id="posttype2" name="posttype">
+                <input style="display: none;" id="numj" name="numj">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span
+                            class="sr-only">关闭</span></button>
+                    <h4 class="modal-title">修改数据</h4>
+                </div>
+                <div class="modal-body">
+                    <table class="modifytable">
+                        <thead>
+                        <tr>
+                            <th>原编号</th>
+                            <th>班级编号</th>
+                            <th>班级名称</th>
+                            <th>所属院系</th>
+                            <th>成立日期</th>
+                            <th>班主任</th>
+                            <th>负责人电话</th>
+                        </tr>
+                        </thead>
+                        <tbody id="modifieddata">
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">修改</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="deleteDialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form class="form-horizontal" action="/class" method="POST">
+                <input style="display: none;" id="numk" name="numk">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span
+                            class="sr-only">关闭</span></button>
+                    <h4 class="modal-title">删除数据</h4>
+                </div>
+                <input style="display: none;" id="posttype3" name="posttype">
+                <input style="display: none;" id="deletekeys" name="deletekeys">
+                <div class="modal-body">
+                    <div>
+                        <div id="selectedRows2" class="datagrid"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger">删除</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
 <script>
+    {% if inserterror == "True" %}
+        new $.zui.Messager('数据插入失败', {
+            close: false,
+            type: 'danger'
+        }).show();
+    {% endif %}
+    {% if inserterror == "False" %}
+        new $.zui.Messager('数据插入成功', {
+            close: false,
+            type: 'success'
+        }).show();
+    {% endif %}
+    {% if modifysuccessednum %}
+        new $.zui.Messager('{{ modifysuccessednum }} 条数据修改成功, {{ modifyunsuccessednum }} 条失败', {
+            close: false
+        }).show();
+    {% endif %}
+    {% if deletesuccessednum %}
+        new $.zui.Messager('{{ deletesuccessednum }} 条数据删除成功, {{ deleteunsuccessednum }} 条失败', {
+            close: false,
+        }).show();
+    {% endif %}
     $('#remote').datagrid({
         states: {
             pager: {page: 1}
@@ -101,6 +276,141 @@
         checkable: true,
         selectable: true,
         checkByClickRow: true,
+        hovercell: true,
+    });
+    $('#selectedRows').datagrid({
+        dataSource: {
+            cols: [
+                {name: 'classid', label: '班级编号', width: 0.3},
+                {name: 'classname', label: '班级名称', width: 0.6},
+                {name: 'departid', label: '所属院系', width: 0.3},
+                {name: 'begindate', label: '成立日期', width: 0.3},
+                {name: 'master', label: '班主任', width: 0.3},
+                {name: 'mastertel', label: '负责人电话', width: 0.5},
+            ],
+            array: []
+        },
+        height: window.innerHeight / 5
+    });
+    $('#selectedRows2').datagrid({
+        dataSource: {
+            cols: [
+                {name: 'classid', label: '班级编号', width: 0.3},
+                {name: 'classname', label: '班级名称', width: 0.6},
+                {name: 'departid', label: '所属院系', width: 0.3},
+                {name: 'begindate', label: '成立日期', width: 0.3},
+                {name: 'master', label: '班主任', width: 0.3},
+                {name: 'mastertel', label: '负责人电话', width: 0.5},
+            ],
+            array: []
+        },
+        height: window.innerHeight / 5
+    });
+
+    var remote = $('#remote').data('zui.datagrid');
+    var selectedRowsObj = $("#selectedRows").data('zui.datagrid');
+    var selectedRowsObj2 = $("#selectedRows2").data('zui.datagrid');
+    var selectedRowsData = [];
+    var selectedRows;
+    $("#insert").click(function () {
+        selectedRowsData = remote.getCheckItems();
+        if (Array.isArray(selectedRowsData) && selectedRowsData.length === 0) {
+            $("#dvvc").hide();
+        }
+        else {
+            selectedRows = {
+                cols: [
+                    {name: 'classid', label: '班级编号', width: 0.3},
+                    {name: 'classname', label: '班级名称', width: 0.6},
+                    {name: 'departid', label: '所属院系', width: 0.3},
+                    {name: 'begindate', label: '成立日期', width: 0.3},
+                    {name: 'master', label: '班主任', width: 0.3},
+                    {name: 'mastertel', label: '负责人电话', width: 0.5},
+                ],
+                array: selectedRowsData,
+            };
+            selectedRowsObj.setDataSource(selectedRows);
+            $("#dvvc").show();
+        }
+        $('#posttype').val("insert");
+        $("#insertDialog").modal('toggle', 'center');
+    });
+    $("#delete").click(function () {
+        selectedRowsData = remote.getCheckItems();
+        if (Array.isArray(selectedRowsData) && selectedRowsData.length === 0) {
+            new $.zui.Messager('未选择数据！', {
+                close: false,
+                type: 'danger'
+            }).show();
+        }
+        else {
+            var keys = "";
+            selectedRows = {
+                cols: [
+                    {name: 'classid', label: '班级编号', width: 0.3},
+                    {name: 'classname', label: '班级名称', width: 0.6},
+                    {name: 'departid', label: '所属院系', width: 0.3},
+                    {name: 'begindate', label: '成立日期', width: 0.3},
+                    {name: 'master', label: '班主任', width: 0.3},
+                    {name: 'mastertel', label: '负责人电话', width: 0.5},
+                ],
+                array: selectedRowsData,
+            };
+            selectedRowsObj2.setDataSource(selectedRows);
+            $('#posttype3').val("delete");
+            $('#numk').val(selectedRowsData.length.toString());
+            for (var i = 0; i < selectedRowsData.length; i++) {
+                keys += selectedRowsData[i].classid + " ";
+            }
+            $('#deletekeys').val(keys);
+            $("#deleteDialog").modal('toggle', 'center');
+        }
+    });
+    $("#modify").click(function () {
+        selectedRowsData = remote.getCheckItems();
+        if (Array.isArray(selectedRowsData) && selectedRowsData.length === 0) {
+            new $.zui.Messager('未选择数据！', {
+                close: false,
+                type: 'danger'
+            }).show();
+        }
+        else {
+            $('#modifieddata').html("");
+            var str = "";
+            for (var i = 0; i < selectedRowsData.length; i++) {
+                str += "<tr><td><input readonly=\"readonly\" name=\"classid" + i.toString() + "\" value=\"" + selectedRowsData[i].classid + "\" class=\"form-control\"></td>";
+                str += "<td><input name=\"modclassid" + selectedRowsData[i].classid + "\" value=\"" + selectedRowsData[i].classid + "\" class=\"form-control\"></td>";
+                str += "<td><input name=\"modclassname" + selectedRowsData[i].classid + "\" value=\"" + selectedRowsData[i].classname + "\" class=\"form-control\"></td>";
+                str += "<td><input name=\"moddepartid" + selectedRowsData[i].classid + "\" value=\"" + selectedRowsData[i].departid + "\" class=\"form-control\"></td>";
+                str += "<td><input name=\"modbegindate" + selectedRowsData[i].classid + "\" value=\"" + selectedRowsData[i].begindate + "\" class=\"form-control\"></td>";
+                str += "<td><input name=\"modmaster" + selectedRowsData[i].classid + "\" value=\"" + selectedRowsData[i].master + "\" class=\"form-control\"></td>";
+                str += "<td><input name=\"modmastertel" + selectedRowsData[i].classid + "\" value=\"" + selectedRowsData[i].mastertel + "\" class=\"form-control\"></td></tr>";
+            }
+            $("#modifieddata").append(str);
+            $('#posttype2').val("modify");
+            $('#numj').val(selectedRowsData.length.toString());
+            $("#modifyDialog").modal('toggle', 'center');
+        }
+    });
+    var newlinesNum = 1;
+    $('#numi').val(newlinesNum.toString());
+    $("#addLine").click(function () {
+        newlinesNum += 1;
+        var tr = "<tr><td>" + newlinesNum.toString() + "</td>" +
+            "<td><input name=\"newclassid" + newlinesNum.toString() + "\" placeholder=\"班级编号\" class=\"form-control\"></td>" +
+            "<td><input name=\"newclassname" + newlinesNum.toString() + "\" placeholder=\"班级名称\" class=\"form-control\"></td>" +
+            "<td><input name=\"newdepartid" + newlinesNum.toString() + "\" placeholder=\"所属院系\" class=\"form-control\"></td>" +
+            "<td><input name=\"newbegindate" + newlinesNum.toString() + "\" placeholder=\"成立日期\" class=\"form-control\"></td>" +
+            "<td><input name=\"newmaster" + newlinesNum.toString() + "\" placeholder=\"班主任\" class=\"form-control\"></td>" +
+            "<td><input name=\"newmastertel" + newlinesNum.toString() + "\" placeholder=\"负责人电话\" class=\"form-control\"></td>" +
+            "<td><a href=\"\" name=\"delete" + newlinesNum.toString() + "\" class=\"text-danger\"><i class=\"icon-trash\"></i></a></td></tr>";
+        $('#addtable').append(tr);
+        $('#numi').val(newlinesNum.toString());
+    });
+    $("#refresh").click(function () {
+        $('#inputSearchExample2').val("00");
+        $('#inputSearchExample2').val("");
+        remote.render();
     });
     $("#inputSearchExample2").on("input propertychange",
         function () {

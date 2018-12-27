@@ -140,7 +140,83 @@ def department():
 @app.route('/class', methods=['GET', 'POST'], endpoint='classes')
 @auth
 def classes():
-    return render_template('class.html')
+    if request.method == 'GET':
+        return render_template('class.html')
+    else:
+        if request.form.get('posttype') == 'insert':
+            numi = request.form.get('numi')
+            newclassid = []
+            newclassname = []
+            newdepartid = []
+            newbegindate = []
+            newmaster = []
+            newmastertel = []
+            newdatasets = "("
+            for i in range(int(numi)):
+                newclassid.append(request.form.get('newclassid' + str(i + 1)))
+                newclassname.append(request.form.get('newclassname' + str(i + 1)))
+                newdepartid.append(request.form.get('newdepartid' + str(i + 1)))
+                newbegindate.append(request.form.get('newbegindate' + str(i + 1)))
+                newmaster.append(request.form.get('newmaster' + str(i + 1)))
+                newmastertel.append(request.form.get('newmastertel' + str(i + 1)))
+            for i in range(int(numi)):
+                newdatasets += '"' + newclassid[i] + '",'
+                newdatasets += '"' + newclassname[i] + '",'
+                newdatasets += '"' + newdepartid[i] + '",'
+                newdatasets += '"' + newbegindate[i] + '",'
+                newdatasets += '"' + newmaster[i] + '",'
+                newdatasets += '"' + newmastertel[i] + '"'
+                newdatasets += '),('
+            newdatasets = newdatasets[:-2] + ';'
+            insertsuccess = db.insertTable(pool, "class(classid,classname,departid,begindate,master,mastertel)",
+                                           newdatasets)
+            if insertsuccess == True:
+                return render_template('class.html', inserterror="False")
+            else:
+                return render_template('class.html', inserterror="True")
+        elif request.form.get('posttype') == 'modify':
+            numj = request.form.get('numj')
+            k = 0
+            notmodclassid = []
+            modclassid = []
+            modclassname = []
+            moddepartid = []
+            modbegindate = []
+            modmaster = []
+            modmastertel = []
+            for i in range(int(numj)):
+                notmodclassid.append(request.form.get('classid' + str(i)))
+                modclassid.append(request.form.get('modclassid' + notmodclassid[i]))
+                modclassname.append(request.form.get('modclassname' + notmodclassid[i]))
+                moddepartid.append(request.form.get('moddepartid' + notmodclassid[i]))
+                modbegindate.append(request.form.get('modbegindate' + notmodclassid[i]))
+                modmaster.append(request.form.get('modmaster' + notmodclassid[i]))
+                modmastertel.append(request.form.get('modmastertel' + notmodclassid[i]))
+            for i in range(int(numj)):
+                modclassdata = ""
+                modclassdata += 'classid="' + modclassid[i] + '"'
+                modclassdata += ',classname="' + modclassname[i] + '"'
+                modclassdata += ',departid="' + moddepartid[i] + '"'
+                modclassdata += ',begindate="' + modbegindate[i] + '"'
+                modclassdata += ',master="' + modmaster[i] + '"'
+                modclassdata += ',mastertel="' + modmastertel[i] + '"'
+                pjdr = 'classid="' + notmodclassid[i] + '"'
+                modiifysuccess = db.modifyTable(pool, "class", modclassdata, pjdr)
+                if modiifysuccess == True:
+                    k += 1
+            return render_template('class.html', modifysuccessednum=str(k),
+                                   modifyunsuccessednum=str(int(numj) - k))
+        elif request.form.get('posttype') == 'delete':
+            numk = request.form.get('numk')
+            l = 0
+            strdeletedepartids = request.form.get('deletekeys')
+            deleteclassids = strdeletedepartids.split(' ')
+            for i in range(int(numk)):
+                deletesuccess = db.deletekeys(pool, 'class', "classid", '"' + deleteclassids[i] + '"')
+                if deletesuccess == True:
+                    l += 1
+            return render_template('class.html', deletesuccessednum=str(l),
+                                   deleteunsuccessednum=str(int(numk) - l))
 
 @app.route('/student', methods=['GET', 'POST'], endpoint='student')
 @auth

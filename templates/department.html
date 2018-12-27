@@ -68,13 +68,13 @@
                             <button id="insert" type="button" class="btn btn-primary btn-block">插入</button>
                         </li>
                         <li>
-                            <button id="modify" type="button" class="btn btn-primary btn-block">修改</button>
+                            <button id="modify" type="button" class="btn btn-info btn-block">修改</button>
                         </li>
                         <li>
-                            <button id="delete" type="button" class="btn btn-primary btn-block">删除</button>
+                            <button id="delete" type="button" class="btn btn-danger btn-block">删除</button>
                         </li>
                         <li>
-                            <button id="refresh" type="button" class="btn btn-primary btn-block">刷新</button>
+                            <button id="refresh" type="button" class="btn btn-success btn-block">刷新</button>
                         </li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
@@ -101,13 +101,13 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <form class="form-horizontal" action="/department" method="POST">
-                <input style="display: none;" id="numi" name="numi"><label for="numi"></label>
+                <input style="display: none;" id="numi" name="numi">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span
                             class="sr-only">关闭</span></button>
                     <h4 class="modal-title">插入数据</h4>
                 </div>
-                <input style="display: none;" id="posttype" name="posttype"><label for="posttype"></label>
+                <input style="display: none;" id="posttype" name="posttype">
                 <div class="modal-body">
                     <div id="dvvc">
                         <h5>对照</h5>
@@ -138,14 +138,10 @@
                         <tbody id="addtable">
                         <tr>
                             <td>1</td>
-                            <td><input name="newdepanum1" placeholder="院系编号" class="form-control"><label
-                                    for="newdepanum1"></label></td>
-                            <td><input name="newdepaname1" placeholder="院系名称" class="form-control"><label
-                                    for="newdepaname1"></label></td>
-                            <td><input name="newhead1" placeholder="负责人" class="form-control"><label
-                                    for="newhead1"></label></td>
-                            <td><input name="newtele1" placeholder="电话" class="form-control"><label
-                                    for="newtele1"></label></td>
+                            <td><input name="newdepanum1" placeholder="院系编号" class="form-control"></td>
+                            <td><input name="newdepaname1" placeholder="院系名称" class="form-control"></td>
+                            <td><input name="newhead1" placeholder="负责人" class="form-control"></td>
+                            <td><input name="newtele1" placeholder="电话" class="form-control"></td>
                             <td><a href="" id="delete1" class="text-danger"><i class="icon-trash"></i></a></td>
                         </tr>
                         </tbody>
@@ -164,8 +160,8 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <form class="form-horizontal" action="/department" method="POST">
-                <input style="display: none;" id="posttype2" name="posttype"><label for="posttype2"></label>
-                <input style="display: none;" id="numj" name="numj"><label for="numj"></label>
+                <input style="display: none;" id="posttype2" name="posttype">
+                <input style="display: none;" id="numj" name="numj">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span
                             class="sr-only">关闭</span></button>
@@ -200,14 +196,14 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <form class="form-horizontal" action="/department" method="POST">
-                <input style="display: none;" id="numk" name="numk"><label for="numk"></label>
+                <input style="display: none;" id="numk" name="numk">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span
                             class="sr-only">关闭</span></button>
                     <h4 class="modal-title">删除数据</h4>
                 </div>
-                <input style="display: none;" id="posttype3" name="posttype"><label for="posttype3"></label>
-                <input style="display: none;" id="deletekeys" name="deletekeys"><label for="deletekeys"></label>
+                <input style="display: none;" id="posttype3" name="posttype">
+                <input style="display: none;" id="deletekeys" name="deletekeys">
                 <div class="modal-body">
                     <div>
                         <div id="selectedRows2" class="datagrid"></div>
@@ -364,11 +360,11 @@
             $('#modifieddata').html("");
             var str = "";
             for (var i = 0; i < selectedRowsData.length; i++) {
-                str += "<tr><td><input name=\"departid" + i.toString() + "\" value=\"" + selectedRowsData[i].departid + "\" class=\"form-control\"><label for=\"" + selectedRowsData[i].departid + "\"" + "\"></label></td>";
-                str += "<td><input name=\"moddepartid" + selectedRowsData[i].departid + "\" value=\"" + selectedRowsData[i].departid + "\" class=\"form-control\"><label for=\"" + selectedRowsData[i].departid + "\"" + "\"></label></td>";
-                str += "<td><input name=\"moddepartname" + selectedRowsData[i].departid + "\" value=\"" + selectedRowsData[i].departname + "\" class=\"form-control\"><label for=\"" + selectedRowsData[i].departname + "\"" + "\"></label></td>";
-                str += "<td><input name=\"moddeparthead" + selectedRowsData[i].departid + "\" value=\"" + selectedRowsData[i].departhead + "\" class=\"form-control\"><label for=\"" + selectedRowsData[i].departhead + "\"" + "\"></label></td>";
-                str += "<td><input name=\"modtelephone" + selectedRowsData[i].departid + "\" value=\"" + selectedRowsData[i].telephone + "\" class=\"form-control\"><label for=\"" + selectedRowsData[i].telephone + "\"" + "\"></label></td></tr>";
+                str += "<tr><td><input readonly=\"readonly\" name=\"departid" + i.toString() + "\" value=\"" + selectedRowsData[i].departid + "\" class=\"form-control\"></td>";
+                str += "<td><input name=\"moddepartid" + selectedRowsData[i].departid + "\" value=\"" + selectedRowsData[i].departid + "\" class=\"form-control\"></td>";
+                str += "<td><input name=\"moddepartname" + selectedRowsData[i].departid + "\" value=\"" + selectedRowsData[i].departname + "\" class=\"form-control\"></td>";
+                str += "<td><input name=\"moddeparthead" + selectedRowsData[i].departid + "\" value=\"" + selectedRowsData[i].departhead + "\" class=\"form-control\"></td>";
+                str += "<td><input name=\"modtelephone" + selectedRowsData[i].departid + "\" value=\"" + selectedRowsData[i].telephone + "\" class=\"form-control\"></td></tr>";
             }
             $("#modifieddata").append(str);
             $('#posttype2').val("modify");
@@ -380,11 +376,12 @@
     $('#numi').val(newlinesNum.toString());
     $("#addLine").click(function () {
         newlinesNum += 1;
-        var tr = "<tr><td>" + newlinesNum.toString() + "</td><td><input name=\"newdepanum" + newlinesNum.toString() + "\" placeholder=\"院系编号\" class=\"form-control\"><label for=\"newdepanum" + newlinesNum.toString() + "\"></label></td><td><input name=\"newdepaname" + newlinesNum.toString() + "\" placeholder=\"院系名称\" class=\"form-control\"><label for=\"newdepaname" + newlinesNum.toString() + "\"></label></td> <td><input name=\"newhead" + newlinesNum.toString() + "\" placeholder=\"负责人\" class=\"form-control\"><label for=\"newhead" + newlinesNum.toString() + "\"></label></td> <td><input name=\"newtele" + newlinesNum.toString() + "\" placeholder=\"电话\" class=\"form-control\"><label for=\"newtele" + newlinesNum.toString() + "\"></label></td> <td><a href=\"\" name=\"delete" + newlinesNum.toString() + "\" class=\"text-danger\"><i class=\"icon-trash\"></i></a></td></tr>";
+        var tr = "<tr><td>" + newlinesNum.toString() + "</td><td><input name=\"newdepanum" + newlinesNum.toString() + "\" placeholder=\"院系编号\" class=\"form-control\"></td><td><input name=\"newdepaname" + newlinesNum.toString() + "\" placeholder=\"院系名称\" class=\"form-control\"></td><td><input name=\"newhead" + newlinesNum.toString() + "\" placeholder=\"负责人\" class=\"form-control\"></td> <td><input name=\"newtele" + newlinesNum.toString() + "\" placeholder=\"电话\" class=\"form-control\"></td> <td><a href=\"\" name=\"delete" + newlinesNum.toString() + "\" class=\"text-danger\"><i class=\"icon-trash\"></i></a></td></tr>";
         $('#addtable').append(tr);
         $('#numi').val(newlinesNum.toString());
     });
     $("#refresh").click(function () {
+        $('#inputSearchExample2').val("00");
         $('#inputSearchExample2').val("");
         remote.render();
     });
