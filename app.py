@@ -221,7 +221,85 @@ def classes():
 @app.route('/student', methods=['GET', 'POST'], endpoint='student')
 @auth
 def student():
-    return render_template('student.html')
+    if request.method == 'GET':
+        return render_template('student.html')
+    else:
+        if request.form.get('posttype') == 'insert':
+            numi = request.form.get('numi')
+            newstudentid = []
+            newname = []
+            newsex = []
+            newclassid = []
+            newbirthday = []
+            newnative = []
+            newdatasets = "("
+            for i in range(int(numi)):
+                newstudentid.append(request.form.get('newstudentid' + str(i + 1)))
+                newname.append(request.form.get('newname' + str(i + 1)))
+                newsex.append(request.form.get('newsex' + str(i + 1)))
+                newclassid.append(request.form.get('newclassid' + str(i + 1)))
+                newbirthday.append(request.form.get('newbirthday' + str(i + 1)))
+                newnative.append(request.form.get('newnative' + str(i + 1)))
+            for i in range(int(numi)):
+                newdatasets += '"' + newstudentid[i] + '",'
+                newdatasets += '"' + newname[i] + '",'
+                newdatasets += '"' + newsex[i] + '",'
+                newdatasets += '"' + newclassid[i] + '",'
+                newdatasets += '"' + newbirthday[i] + '",'
+                newdatasets += '"' + newnative[i] + '"'
+                newdatasets += '),('
+            newdatasets = newdatasets[:-2] + ';'
+            insertsuccess = db.insertTable(pool, "student(studentid,name,sex,classid,birthday,native)",
+                                           newdatasets)
+            if insertsuccess == True:
+                return render_template('student.html', inserterror="False")
+            else:
+                return render_template('student.html', inserterror="True")
+        elif request.form.get('posttype') == 'modify':
+            numj = request.form.get('numj')
+            k = 0
+            notmodstudentid = []
+            modstudentid = []
+            modname = []
+            modsex = []
+            modclassid = []
+            modbirthday = []
+            modnative = []
+            for i in range(int(numj)):
+                notmodstudentid.append(request.form.get('studentid' + str(i)))
+                mmm = 'modname' + notmodstudentid[i]
+                modstudentid.append(request.form.get('modstudentid' + notmodstudentid[i]))
+                modname.append(request.form.get(mmm))
+                modsex.append(request.form.get('modsex' + notmodstudentid[i]))
+                modclassid.append(request.form.get('modclassid' + notmodstudentid[i]))
+                modbirthday.append(request.form.get('modbirthday' + notmodstudentid[i]))
+                modnative.append(request.form.get('modnative' + notmodstudentid[i]))
+            for i in range(int(numj)):
+                modstudentdata = ""
+                modstudentdata += 'studentid="' + modstudentid[i] + '"'
+                modstudentdata += ',name="' + modname[i] + '"'
+                modstudentdata += ',sex="' + modsex[i] + '"'
+                modstudentdata += ',classid="' + modclassid[i] + '"'
+                modstudentdata += ',birthday="' + modbirthday[i] + '"'
+                modstudentdata += ',native="' + modnative[i] + '"'
+                pjdr = 'studentid="' + notmodstudentid[i] + '"'
+                modiifysuccess = db.modifyTable(pool, "student", modstudentdata, pjdr)
+                if modiifysuccess == True:
+                    k += 1
+            return render_template('student.html', modifysuccessednum=str(k),
+                                   modifyunsuccessednum=str(int(numj) - k))
+        elif request.form.get('posttype') == 'delete':
+            numk = request.form.get('numk')
+            l = 0
+            strdeletedepartids = request.form.get('deletekeys')
+            deletestudentids = strdeletedepartids.split(' ')
+            for i in range(int(numk)):
+                deletesuccess = db.deletekeys(pool, 'student', "studentid", '"' + deletestudentids[i] + '"')
+                if deletesuccess == True:
+                    l += 1
+            return render_template('student.html', deletesuccessednum=str(l),
+                                   deleteunsuccessednum=str(int(numk) - l))
+
 
 @app.route('/search', methods=['GET', 'POST'], endpoint='search')
 @auth
@@ -231,7 +309,65 @@ def search():
 @app.route('/change', methods=['GET', 'POST'], endpoint='change')
 @auth
 def change():
-    return render_template('change.html')
+    if request.method == 'GET':
+        return render_template('punish.html')
+    else:
+        if request.form.get('posttype') == 'insert':
+            numi = request.form.get('numi')
+            newstudentid = []
+            newpunishtype = []
+            newrecdate = []
+            newdatasets = "("
+            for i in range(int(numi)):
+                newstudentid.append(request.form.get('newstudentid' + str(i + 1)))
+                newpunishtype.append(request.form.get('newpunishtype' + str(i + 1)))
+                newrecdate.append(request.form.get('newrecdate' + str(i + 1)))
+            for i in range(int(numi)):
+                newdatasets += '"' + newstudentid[i] + '",'
+                newdatasets += '"' + newpunishtype[i] + '",'
+                newdatasets += '"' + newrecdate[i] + '"'
+                newdatasets += '),('
+            newdatasets = newdatasets[:-2] + ';'
+            insertsuccess = db.insertTable(pool, "punish(studentid,punish,recdate)",
+                                           newdatasets)
+            if insertsuccess == True:
+                return render_template('punish.html', inserterror="False")
+            else:
+                return render_template('punish.html', inserterror="True")
+        elif request.form.get('posttype') == 'modify':
+            numj = request.form.get('numj')
+            k = 0
+            pid = []
+            modstudentid = []
+            modpunishtype = []
+            modrecdate = []
+            for i in range(int(numj)):
+                pid.append(request.form.get('pid' + str(i)))
+                modstudentid.append(request.form.get('modstudentid' + pid[i]))
+                modpunishtype.append(request.form.get('modpunishtype' + pid[i]))
+                modrecdate.append(request.form.get('modrecdate' + pid[i]))
+            for i in range(int(numj)):
+                modstudentdata = ""
+                modstudentdata += 'studentid="' + modstudentid[i] + '"'
+                modstudentdata += ',punish="' + modpunishtype[i] + '"'
+                modstudentdata += ',recdate="' + modrecdate[i] + '"'
+                pjdr = 'pid="' + pid[i] + '"'
+                modiifysuccess = db.modifyTable(pool, "punish", modstudentdata, pjdr)
+                if modiifysuccess == True:
+                    k += 1
+            return render_template('punish.html', modifysuccessednum=str(k),
+                                   modifyunsuccessednum=str(int(numj) - k))
+        elif request.form.get('posttype') == 'delete':
+            numk = request.form.get('numk')
+            l = 0
+            strdeletedepartids = request.form.get('deletekeys')
+            deletestudentids = strdeletedepartids.split(' ')
+            for i in range(int(numk)):
+                deletesuccess = db.deletekeys(pool, 'punish', "pid", '"' + deletestudentids[i] + '"')
+                if deletesuccess == True:
+                    l += 1
+            return render_template('punish.html', deletesuccessednum=str(l),
+                                   deleteunsuccessednum=str(int(numk) - l))
 
 @app.route('/static/changes.html', methods=['GET', 'POST'], endpoint='changesiframe')
 @auth
@@ -251,12 +387,162 @@ def changesiframe():
 @app.route('/reward', methods=['GET', 'POST'], endpoint='reward')
 @auth
 def reward():
-    return render_template('reward.html')
+    if request.method == 'GET':
+        return render_template('reward.html')
+    else:
+        if request.form.get('posttype') == 'insert':
+            numi = request.form.get('numi')
+            newstudentid = []
+            newrewardtype = []
+            newrecdate = []
+            newdatasets = "("
+            for i in range(int(numi)):
+                newstudentid.append(request.form.get('newstudentid' + str(i + 1)))
+                newrewardtype.append(request.form.get('newrewardtype' + str(i + 1)))
+                newrecdate.append(request.form.get('newrecdate' + str(i + 1)))
+            for i in range(int(numi)):
+                newdatasets += '"' + newstudentid[i] + '",'
+                newdatasets += '"' + newrewardtype[i] + '",'
+                newdatasets += '"' + newrecdate[i] + '"'
+                newdatasets += '),('
+            newdatasets = newdatasets[:-2] + ';'
+            insertsuccess = db.insertTable(pool, "reward(studentid,reward,recdate)",
+                                           newdatasets)
+            if insertsuccess == True:
+                return render_template('reward.html', inserterror="False")
+            else:
+                return render_template('reward.html', inserterror="True")
+        elif request.form.get('posttype') == 'modify':
+            numj = request.form.get('numj')
+            k = 0
+            rid = []
+            modstudentid = []
+            modrewardtype = []
+            modrecdate = []
+            for i in range(int(numj)):
+                rid.append(request.form.get('rid' + str(i)))
+                modstudentid.append(request.form.get('modstudentid' + rid[i]))
+                modrewardtype.append(request.form.get('modrewardtype' + rid[i]))
+                modrecdate.append(request.form.get('modrecdate' + rid[i]))
+            for i in range(int(numj)):
+                modstudentdata = ""
+                modstudentdata += 'studentid="' + modstudentid[i] + '"'
+                modstudentdata += ',reward="' + modrewardtype[i] + '"'
+                modstudentdata += ',recdate="' + modrecdate[i] + '"'
+                pjdr = 'rid="' + rid[i] + '"'
+                modiifysuccess = db.modifyTable(pool, "reward", modstudentdata, pjdr)
+                if modiifysuccess == True:
+                    k += 1
+            return render_template('reward.html', modifysuccessednum=str(k),
+                                   modifyunsuccessednum=str(int(numj) - k))
+        elif request.form.get('posttype') == 'delete':
+            numk = request.form.get('numk')
+            l = 0
+            strdeletedepartids = request.form.get('deletekeys')
+            deletestudentids = strdeletedepartids.split(' ')
+            for i in range(int(numk)):
+                deletesuccess = db.deletekeys(pool, 'reward', "rid", '"' + deletestudentids[i] + '"')
+                if deletesuccess == True:
+                    l += 1
+            return render_template('reward.html', deletesuccessednum=str(l),
+                                   deleteunsuccessednum=str(int(numk) - l))
+
 
 @app.route('/punish', methods=['GET', 'POST'], endpoint='punish')
 @auth
 def punish():
-    return render_template('punish.html')
+    if request.method == 'GET':
+        return render_template('punish.html')
+    else:
+        if request.form.get('posttype') == 'insert':
+            numi = request.form.get('numi')
+            newstudentid = []
+            newpunishtype = []
+            newrecdate = []
+            newdatasets = "("
+            for i in range(int(numi)):
+                newstudentid.append(request.form.get('newstudentid' + str(i + 1)))
+                newpunishtype.append(request.form.get('newpunishtype' + str(i + 1)))
+                newrecdate.append(request.form.get('newrecdate' + str(i + 1)))
+            for i in range(int(numi)):
+                newdatasets += '"' + newstudentid[i] + '",'
+                newdatasets += '"' + newpunishtype[i] + '",'
+                newdatasets += '"' + newrecdate[i] + '"'
+                newdatasets += '),('
+            newdatasets = newdatasets[:-2] + ';'
+            insertsuccess = db.insertTable(pool, "punish(studentid,punish,recdate)",
+                                           newdatasets)
+            if insertsuccess == True:
+                return render_template('punish.html', inserterror="False")
+            else:
+                return render_template('punish.html', inserterror="True")
+        elif request.form.get('posttype') == 'modify':
+            numj = request.form.get('numj')
+            k = 0
+            pid = []
+            modstudentid = []
+            modpunishtype = []
+            modrecdate = []
+            for i in range(int(numj)):
+                pid.append(request.form.get('pid' + str(i)))
+                modstudentid.append(request.form.get('modstudentid' + pid[i]))
+                modpunishtype.append(request.form.get('modpunishtype' + pid[i]))
+                modrecdate.append(request.form.get('modrecdate' + pid[i]))
+            for i in range(int(numj)):
+                modstudentdata = ""
+                modstudentdata += 'studentid="' + modstudentid[i] + '"'
+                modstudentdata += ',punish="' + modpunishtype[i] + '"'
+                modstudentdata += ',recdate="' + modrecdate[i] + '"'
+                pjdr = 'pid="' + pid[i] + '"'
+                modiifysuccess = db.modifyTable(pool, "punish", modstudentdata, pjdr)
+                if modiifysuccess == True:
+                    k += 1
+            return render_template('punish.html', modifysuccessednum=str(k),
+                                   modifyunsuccessednum=str(int(numj) - k))
+        elif request.form.get('posttype') == 'delete':
+            numk = request.form.get('numk')
+            l = 0
+            strdeletedepartids = request.form.get('deletekeys')
+            deletestudentids = strdeletedepartids.split(' ')
+            for i in range(int(numk)):
+                deletesuccess = db.deletekeys(pool, 'punish', "pid", '"' + deletestudentids[i] + '"')
+                if deletesuccess == True:
+                    l += 1
+            return render_template('punish.html', deletesuccessednum=str(l),
+                                   deleteunsuccessednum=str(int(numk) - l))
+
+
+@app.route('/cladepa', methods=['GET'], endpoint='cladepa')
+@auth
+def cladepa():
+    datas = db.getTable(pool, 'department', ['departid', 'departname', 'departhead', 'telephone'])
+    noparsejson = {"departid": []}
+    for i in range(len(datas)):
+        noparsejson["departid"].append(datas[i]["departid"])
+    jsonstr = json.dumps(noparsejson)
+    return jsonstr
+
+
+@app.route('/stucla', methods=['GET'], endpoint='stucla')
+@auth
+def stucla():
+    datas = db.getTable(pool, 'class', ['classid', 'classname', 'departid', 'begindate', 'master', 'mastertel'])
+    noparsejson = {"classid": []}
+    for i in range(len(datas)):
+        noparsejson["classid"].append(datas[i]["classid"])
+    jsonstr = json.dumps(noparsejson)
+    return jsonstr
+
+
+@app.route('/stu', methods=['GET'], endpoint='stu')
+@auth
+def stu():
+    datas = db.getTable(pool, 'student', ['studentid', 'name', 'sex', 'classid', 'birthday', 'native'])
+    noparsejson = {"studentid": []}
+    for i in range(len(datas)):
+        noparsejson["studentid"].append(datas[i]["studentid"])
+    jsonstr = json.dumps(noparsejson)
+    return jsonstr
 
 @app.route('/depadata', methods=['GET'], endpoint='depadata')
 @auth
@@ -298,6 +584,8 @@ def studata():
     search = request.args.get('search')
     datas = db.getTable(pool, 'student', ['studentid', 'name', 'sex', 'classid', 'birthday', 'native'], sortBy, order,
                         search)
+    for i in range(len(datas)):
+        datas[i]["studentname"] = datas[i].pop("name")
     page = int(request.args.get('page'))
     recPerPage = int(request.args.get('recPerPage'))
     recTotal = len(datas)

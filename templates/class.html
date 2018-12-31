@@ -144,8 +144,8 @@
                             <td>1</td>
                             <td><input name="newclassid1" placeholder="班级编号" class="form-control"></td>
                             <td><input name="newclassname1" placeholder="班级名称" class="form-control"></td>
-                            <td><input name="newdepartid1" placeholder="所属院系" class="form-control"></td>
-                            <td><input name="newbegindate1" placeholder="成立日期" class="form-control"></td>
+                            <td><select name="newdepartid1"></select></td>
+                            <td><input type="date" name="newbegindate1" placeholder="成立日期" class="form-control"></td>
                             <td><input name="newmaster1" placeholder="班主任" class="form-control"></td>
                             <td><input name="newmastertel1" placeholder="负责人电话" class="form-control"></td>
                             <td><a href="" id="delete1" class="text-danger"><i class="icon-trash"></i></a></td>
@@ -312,6 +312,7 @@
     var selectedRowsObj2 = $("#selectedRows2").data('zui.datagrid');
     var selectedRowsData = [];
     var selectedRows;
+    var kkk;
     $("#insert").click(function () {
         selectedRowsData = remote.getCheckItems();
         if (Array.isArray(selectedRowsData) && selectedRowsData.length === 0) {
@@ -332,6 +333,15 @@
             selectedRowsObj.setDataSource(selectedRows);
             $("#dvvc").show();
         }
+        $.getJSON('/cladepa', function (data) {
+            $.each(data, function (i, n) {
+                for (var m = 0; m < n.length; m++) {
+                    kkk = "<option value=\"";
+                    kkk += n[m] + "\">" + n[m] + "</option>";
+                    $("select").append(kkk);
+                }
+            });
+        });
         $('#posttype').val("insert");
         $("#insertDialog").modal('toggle', 'center');
     });
@@ -381,12 +391,21 @@
                 str += "<tr><td><input readonly=\"readonly\" name=\"classid" + i.toString() + "\" value=\"" + selectedRowsData[i].classid + "\" class=\"form-control\"></td>";
                 str += "<td><input name=\"modclassid" + selectedRowsData[i].classid + "\" value=\"" + selectedRowsData[i].classid + "\" class=\"form-control\"></td>";
                 str += "<td><input name=\"modclassname" + selectedRowsData[i].classid + "\" value=\"" + selectedRowsData[i].classname + "\" class=\"form-control\"></td>";
-                str += "<td><input name=\"moddepartid" + selectedRowsData[i].classid + "\" value=\"" + selectedRowsData[i].departid + "\" class=\"form-control\"></td>";
-                str += "<td><input name=\"modbegindate" + selectedRowsData[i].classid + "\" value=\"" + selectedRowsData[i].begindate + "\" class=\"form-control\"></td>";
+                str += "<td><select name=\"moddepartid" + selectedRowsData[i].classid + "\"></td>";
+                str += "<td><input type=\"date\" name=\"modbegindate" + selectedRowsData[i].classid + "\" value=\"" + selectedRowsData[i].begindate + "\" class=\"form-control\"></td>";
                 str += "<td><input name=\"modmaster" + selectedRowsData[i].classid + "\" value=\"" + selectedRowsData[i].master + "\" class=\"form-control\"></td>";
                 str += "<td><input name=\"modmastertel" + selectedRowsData[i].classid + "\" value=\"" + selectedRowsData[i].mastertel + "\" class=\"form-control\"></td></tr>";
             }
             $("#modifieddata").append(str);
+            $.getJSON('/cladepa', function (data) {
+                $.each(data, function (i, n) {
+                    for (var m = 0; m < n.length; m++) {
+                        kkk = "<option value=\"";
+                        kkk += n[m] + "\">" + n[m] + "</option>";
+                        $("select").append(kkk);
+                    }
+                });
+            });
             $('#posttype2').val("modify");
             $('#numj').val(selectedRowsData.length.toString());
             $("#modifyDialog").modal('toggle', 'center');
@@ -399,12 +418,21 @@
         var tr = "<tr><td>" + newlinesNum.toString() + "</td>" +
             "<td><input name=\"newclassid" + newlinesNum.toString() + "\" placeholder=\"班级编号\" class=\"form-control\"></td>" +
             "<td><input name=\"newclassname" + newlinesNum.toString() + "\" placeholder=\"班级名称\" class=\"form-control\"></td>" +
-            "<td><input name=\"newdepartid" + newlinesNum.toString() + "\" placeholder=\"所属院系\" class=\"form-control\"></td>" +
-            "<td><input name=\"newbegindate" + newlinesNum.toString() + "\" placeholder=\"成立日期\" class=\"form-control\"></td>" +
+            "<td><select name=\"newdepartid" + newlinesNum.toString() + "\"></td>" +
+            "<td><input type=\"date\" name=\"newbegindate" + newlinesNum.toString() + "\" placeholder=\"成立日期\" class=\"form-control\"></td>" +
             "<td><input name=\"newmaster" + newlinesNum.toString() + "\" placeholder=\"班主任\" class=\"form-control\"></td>" +
             "<td><input name=\"newmastertel" + newlinesNum.toString() + "\" placeholder=\"负责人电话\" class=\"form-control\"></td>" +
             "<td><a href=\"\" name=\"delete" + newlinesNum.toString() + "\" class=\"text-danger\"><i class=\"icon-trash\"></i></a></td></tr>";
         $('#addtable').append(tr);
+        $.getJSON('/cladepa', function (data) {
+            $.each(data, function (i, n) {
+                for (var m = 0; m < n.length; m++) {
+                    kkk = "<option value=\"";
+                    kkk += n[m] + "\">" + n[m] + "</option>";
+                    $("select").append(kkk);
+                }
+            });
+        });
         $('#numi').val(newlinesNum.toString());
     });
     $("#refresh").click(function () {
