@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>奖励情况</title>
+    <title>班级管理</title>
     <link href="/static/zui.min.css" rel="stylesheet">
     <link href="/static/zui.datagrid.min.css" rel="stylesheet">
 </head>
@@ -13,6 +13,7 @@
 <script src="/static/zui.min.js"></script>
 <script src="/static/zui.datagrid.min.js"></script>
 <script src="/static/gaoliang.js"></script>
+<script src="/static/zui.selectable.min.js"></script>
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12" id="navig">
@@ -26,7 +27,7 @@
                             <span class="navbar-inverse icon-bar"></span>
                             <span class="navbar-inverse icon-bar"></span>
                         </button>
-                        <a class="navbar-brand" href="/reward">奖励情况</a>
+                        <a class="navbar-brand" href="/courses">课程管理</a>
                     </div>
                     <div class="collapse navbar-collapse navbar-collapse-example">
                         <ul class="nav navbar-nav">
@@ -101,9 +102,9 @@
 
 
 <div class="modal fade" id="insertDialog">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-fullscreen">
         <div class="modal-content">
-            <form class="form-horizontal" action="/reward" method="POST">
+            <form class="form-horizontal" action="/courses" method="POST">
                 <input style="display: none;" id="numi" name="numi">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span
@@ -131,24 +132,38 @@
                         <thead>
                         <tr>
                             <th>#</th>
-                            <th>学号</th>
-                            <th>奖励类型</th>
-                            <th>奖励日期</th>
+                            <th>课程编号</th>
+                            <th>课程名称</th>
+                            <th>开课日期</th>
+                            <th>地点</th>
+                            <th>上课时间</th>
+                            <th>结课日期</th>
+                            <th>评估方式</th>
+                            <th>学分</th>
+                            <th>院系编号</th>
+                            <th>授课教师</th>
+                            <th>备注</th>
                             <th></th>
                         </tr>
                         </thead>
                         <tbody id="addtable">
                         <tr>
-                            <td>1</td>
-                            <td><select name="newstudentid1"></select></td>
-                            <td><input name="newrewardtype1" class="form-control"></td>
-                            <td><input type="date" name="newrecdate1" class="form-control"></td>
-                            <td><a href="" id="delete1" class="text-danger"><i class="icon-trash"></i></a></td>
+                            <td>2</td>
+                            <td><input name="newcourseid1" placeholder="课程编号" class="form-control"></td>
+                            <td><input name="newcoursename1" placeholder="课程名称" class="form-control"></td>
+                            <td><input type="date" name="newbegindate1"></td>
+                            <td><input name="newplace1" placeholder="上课地点" class="form-control"></td>
+                            <td><input name="newtime1" placeholder="上课时间" class="form-control"></td>
+                            <td><input type="date" name="newenddate1" class="form-control"></td>
+                            <td><input name="newevameans1" placeholder="评估方式" class="form-control"></td>
+                            <td><input name="newstudyscore1" placeholder="学分" class="form-control"></td>
+                            <td><select name="newdepartid1"></select></td>
+                            <td><input name="newteacher1" placeholder="授课教师" class="form-control"></td>
+                            <td><input name="newother1" placeholder="备注" class="form-control"></td>
+                            <td><a href="" name="delete1" class="text-danger"><i class="icon-trash"></i></a></td>
                         </tr>
                         </tbody>
                     </table>
-                </div>
-                <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">插入</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
                 </div>
@@ -158,9 +173,9 @@
 </div>
 
 <div class="modal fade" id="modifyDialog">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-fullscreen">
         <div class="modal-content">
-            <form class="form-horizontal" action="/reward" method="POST">
+            <form class="form-horizontal" action="/courses" method="POST">
                 <input style="display: none;" id="posttype2" name="posttype">
                 <input style="display: none;" id="numj" name="numj">
                 <div class="modal-header">
@@ -172,17 +187,23 @@
                     <table class="modifytable">
                         <thead>
                         <tr>
-                            <th>编号</th>
-                            <th>学号</th>
-                            <th>奖励类型</th>
-                            <th>奖励日期</th>
+                            <th>原编号</th>
+                            <th>课程编号</th>
+                            <th>课程名称</th>
+                            <th>开课日期</th>
+                            <th>地点</th>
+                            <th>上课时间</th>
+                            <th>结课日期</th>
+                            <th>评估方式</th>
+                            <th>学分</th>
+                            <th>院系编号</th>
+                            <th>授课教师</th>
+                            <th>备注</th>
                         </tr>
                         </thead>
                         <tbody id="modifieddata">
                         </tbody>
                     </table>
-                </div>
-                <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">修改</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                 </div>
@@ -191,10 +212,11 @@
     </div>
 </div>
 
+
 <div class="modal fade" id="deleteDialog">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <form class="form-horizontal" action="/reward" method="POST">
+            <form class="form-horizontal" action="/courses" method="POST">
                 <input style="display: none;" id="numk" name="numk">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span
@@ -216,6 +238,7 @@
         </div>
     </div>
 </div>
+
 
 <script>
     {% if inserterror == "True" %}
@@ -246,36 +269,46 @@
         },
         dataSource: {
             cols: [
-                {name: 'rid', label: '编号', width: 0.1},
-                {name: 'studentid', label: '学号', width: 0.3},
-                {name: 'reward', label: '奖励类型', width: 0.3},
-                {name: 'recdate', label: '奖励日期', width: 0.3},
+                {name: 'courseid', label: '课程编号', width: 0.1},
+                {name: 'coursename', label: '课程名称', width: 0.4},
+                {name: 'begindate', label: '开课日期', width: 0.2},
+                {name: 'place', label: '地点', width: 0.2},
+                {name: 'time', label: '上课时间', width: 0.3},
+                {name: 'enddate', label: '结课日期', width: 0.2},
+                {name: 'evameans', label: '评估方式', width: 0.1},
+                {name: 'studyscore', label: '学分', width: 0.1},
+                {name: 'departid', label: '院系编号', width: 0.1},
+                {name: 'teacher', label: '授课教师', width: 0.2},
+                {name: 'other', label: '备注', width: 0.2},
             ],
             remote: function () {
                 return {
-                    url: '/rewarddata',
+                    url: '/coursesdata',
                     type: 'GET',
                     dataType: 'json'
                 };
             }
-        },
-        states: {
-            pager: {page: 1, recPerPage: 20}
         },
         height: window.innerHeight - document.getElementById("navig").clientHeight - 97,
         sortable: true,
         checkable: true,
         selectable: true,
         checkByClickRow: true,
+        hovercell: true,
     });
-    var kkk;
     $('#selectedRows').datagrid({
         dataSource: {
             cols: [
-                {name: 'rid', label: '编号', width: 0.1},
-                {name: 'studentid', label: '学号', width: 0.3},
-                {name: 'reward', label: '奖励类型', width: 0.3},
-                {name: 'recdate', label: '奖励日期', width: 0.3},
+                {name: 'courseid', label: '课程编号', width: 0.1},
+                {name: 'begindate', label: '开课日期', width: 0.2},
+                {name: 'place', label: '地点', width: 0.2},
+                {name: 'time', label: '上课时间', width: 0.3},
+                {name: 'enddate', label: '结课日期', width: 0.2},
+                {name: 'evameans', label: '评估方式', width: 0.1},
+                {name: 'studyscore', label: '学分', width: 0.1},
+                {name: 'departid', label: '院系编号', width: 0.1},
+                {name: 'teacher', label: '授课教师', width: 0.2},
+                {name: 'other', label: '备注', width: 0.2},
             ],
             array: []
         },
@@ -284,10 +317,17 @@
     $('#selectedRows2').datagrid({
         dataSource: {
             cols: [
-                {name: 'rid', label: '编号', width: 0.1},
-                {name: 'studentid', label: '学号', width: 0.3},
-                {name: 'reward', label: '奖励类型', width: 0.3},
-                {name: 'recdate', label: '奖励日期', width: 0.3},
+                {name: 'courseid', label: '课程编号', width: 0.1},
+                {name: 'coursename', label: '课程名称', width: 0.4},
+                {name: 'begindate', label: '开课日期', width: 0.2},
+                {name: 'place', label: '地点', width: 0.2},
+                {name: 'time', label: '上课时间', width: 0.3},
+                {name: 'enddate', label: '结课日期', width: 0.2},
+                {name: 'evameans', label: '评估方式', width: 0.1},
+                {name: 'studyscore', label: '学分', width: 0.1},
+                {name: 'departid', label: '院系编号', width: 0.1},
+                {name: 'teacher', label: '授课教师', width: 0.2},
+                {name: 'other', label: '备注', width: 0.2},
             ],
             array: []
         },
@@ -299,6 +339,7 @@
     var selectedRowsObj2 = $("#selectedRows2").data('zui.datagrid');
     var selectedRowsData = [];
     var selectedRows;
+    var kkk;
     $("#insert").click(function () {
         selectedRowsData = remote.getCheckItems();
         if (Array.isArray(selectedRowsData) && selectedRowsData.length === 0) {
@@ -307,17 +348,24 @@
         else {
             selectedRows = {
                 cols: [
-                    {name: 'rid', label: '编号', width: 0.1},
-                    {name: 'studentid', label: '学号', width: 0.3},
-                    {name: 'reward', label: '奖励类型', width: 0.3},
-                    {name: 'recdate', label: '奖励日期', width: 0.3},
+                    {name: 'courseid', label: '课程编号', width: 0.1},
+                    {name: 'coursename', label: '课程名称', width: 0.4},
+                    {name: 'begindate', label: '开课日期', width: 0.2},
+                    {name: 'place', label: '地点', width: 0.2},
+                    {name: 'time', label: '上课时间', width: 0.3},
+                    {name: 'enddate', label: '结课日期', width: 0.2},
+                    {name: 'evameans', label: '评估方式', width: 0.1},
+                    {name: 'studyscore', label: '学分', width: 0.1},
+                    {name: 'departid', label: '院系编号', width: 0.1},
+                    {name: 'teacher', label: '授课教师', width: 0.2},
+                    {name: 'other', label: '备注', width: 0.2},
                 ],
                 array: selectedRowsData,
             };
             selectedRowsObj.setDataSource(selectedRows);
             $("#dvvc").show();
         }
-        $.getJSON('/stu', function (data) {
+        $.getJSON('/cladepa', function (data) {
             $.each(data, function (i, n) {
                 for (var m = 0; m < n.length; m++) {
                     kkk = "<option value=\"";
@@ -341,10 +389,17 @@
             var keys = "";
             selectedRows = {
                 cols: [
-                    {name: 'rid', label: '编号', width: 0.1},
-                    {name: 'studentid', label: '学号', width: 0.3},
-                    {name: 'reward', label: '奖励类型', width: 0.3},
-                    {name: 'recdate', label: '奖励日期', width: 0.3},
+                    {name: 'courseid', label: '课程编号', width: 0.1},
+                    {name: 'coursename', label: '课程名称', width: 0.4},
+                    {name: 'begindate', label: '开课日期', width: 0.2},
+                    {name: 'place', label: '地点', width: 0.2},
+                    {name: 'time', label: '上课时间', width: 0.3},
+                    {name: 'enddate', label: '结课日期', width: 0.2},
+                    {name: 'evameans', label: '评估方式', width: 0.1},
+                    {name: 'studyscore', label: '学分', width: 0.1},
+                    {name: 'departid', label: '院系编号', width: 0.1},
+                    {name: 'teacher', label: '授课教师', width: 0.2},
+                    {name: 'other', label: '备注', width: 0.2},
                 ],
                 array: selectedRowsData,
             };
@@ -352,7 +407,7 @@
             $('#posttype3').val("delete");
             $('#numk').val(selectedRowsData.length.toString());
             for (var i = 0; i < selectedRowsData.length; i++) {
-                keys += selectedRowsData[i].rid + " ";
+                keys += selectedRowsData[i].courseid + " ";
             }
             $('#deletekeys').val(keys);
             $("#deleteDialog").modal('toggle', 'center');
@@ -368,30 +423,31 @@
         }
         else {
             $('#modifieddata').html("");
-            var str;
+            var str = "";
             for (var i = 0; i < selectedRowsData.length; i++) {
-                str = "";
-                str += "<tr><td><input readonly=\"readonly\" name=\"rid" + i.toString() + "\" value=\"" + selectedRowsData[i].rid + "\" class=\"form-control\"></td>";
-                str += "<td><select name=\"modstudentid" + selectedRowsData[i].rid + "\"></td>";
-                str += "<td><input name=\"modrewardtype" + selectedRowsData[i].rid + "\" value=\"" + selectedRowsData[i].reward + "\" class=\"form-control\"></td>";
-                str += "<td><input type=\"date\" name=\"modrecdate" + selectedRowsData[i].rid + "\" value=\"" + selectedRowsData[i].recdate + "\" class=\"form-control\"></td></tr>";
-                $("#modifieddata").append(str);
-                $.getJSON('/stu', function (data) {
-                    $.each(data, function (index, n) {
-                        for (var m = 0; m < n.length; m++) {
-                            if (n[m] === selectedRowsData[i - 1].studentid) {
-                                kkk = "<option selected value=\"";
-                                kkk += n[m] + "\">" + n[m] + "</option>";
-                            }
-                            else {
-                                kkk = "<option value=\"";
-                                kkk += n[m] + "\">" + n[m] + "</option>";
-                            }
-                            $("select").append(kkk);
-                        }
-                    });
-                });
+                str += "<tr><td><input readonly=\"readonly\" name=\"courseid" + i.toString() + "\" value=\"" + selectedRowsData[i].courseid + "\" class=\"form-control\"></td>";
+                str += "<td><input name=\"modcourseid" + selectedRowsData[i].courseid + "\" value=\"" + selectedRowsData[i].courseid + "\" class=\"form-control\"></td>";
+                str += "<td><input name=\"modcoursename" + selectedRowsData[i].courseid + "\" value=\"" + selectedRowsData[i].coursename + "\" class=\"form-control\"></td>";
+                str += "<td><input type=\"date\" name=\"modbegindate" + selectedRowsData[i].courseid + "\" value=\"" + selectedRowsData[i].begindate + "\" class=\"form-control\"></td>";
+                str += "<td><input name=\"modplace" + selectedRowsData[i].courseid + "\" value=\"" + selectedRowsData[i].place + "\" class=\"form-control\"></td>";
+                str += "<td><input name=\"modtime" + selectedRowsData[i].courseid + "\" value=\"" + selectedRowsData[i].time + "\" class=\"form-control\"></td>";
+                str += "<td><input type=\"date\" name=\"modenddate" + selectedRowsData[i].courseid + "\" value=\"" + selectedRowsData[i].enddate + "\" class=\"form-control\"></td>";
+                str += "<td><input name=\"modevameans" + selectedRowsData[i].courseid + "\" value=\"" + selectedRowsData[i].evameans + "\" class=\"form-control\"></td>";
+                str += "<td><input name=\"modstudyscore" + selectedRowsData[i].courseid + "\" value=\"" + selectedRowsData[i].studyscore + "\"></td>";
+                str += "<td><select name=\"moddepartid" + selectedRowsData[i].courseid + "\" value=\"" + selectedRowsData[i].departid + "\"></td>";
+                str += "<td><input name=\"modteacher" + selectedRowsData[i].courseid + "\" value=\"" + selectedRowsData[i].teacher + "\" class=\"form-control\"></td>";
+                str += "<td><input name=\"modother" + selectedRowsData[i].courseid + "\" value=\"" + selectedRowsData[i].other + "\" class=\"form-control\"></td></tr>";
             }
+            $("#modifieddata").append(str);
+            $.getJSON('/cladepa', function (data) {
+                $.each(data, function (i, n) {
+                    for (var m = 0; m < n.length; m++) {
+                        kkk = "<option value=\"";
+                        kkk += n[m] + "\">" + n[m] + "</option>";
+                        $("select").append(kkk);
+                    }
+                });
+            });
             $('#posttype2').val("modify");
             $('#numj').val(selectedRowsData.length.toString());
             $("#modifyDialog").modal('toggle', 'center');
@@ -402,11 +458,20 @@
     $("#addLine").click(function () {
         newlinesNum += 1;
         var tr = "<tr><td>" + newlinesNum.toString() + "</td>" +
-            "<td><select name=\"newstudentid" + newlinesNum.toString() + "\"></td>" +
-            "<td><input name=\"newrewardtype" + newlinesNum.toString() + "\" placeholder=\"姓名\" class=\"form-control\"></td>" +
-            "<td><input type=\"date\" name=\"newrecdate" + newlinesNum.toString() + "\" placeholder=\"性别\" class=\"form-control\"></td></tr>";
+            "<td><input name=\"newcourseid" + newlinesNum.toString() + "\" placeholder=\"课程编号\" class=\"form-control\"></td>" +
+            "<td><input name=\"newcoursename" + newlinesNum.toString() + "\" placeholder=\"课程名称\" class=\"form-control\"></td>" +
+            "<td><input type=\"date\" name=\"newbegindate" + newlinesNum.toString() + "\"></td>" +
+            "<td><input name=\"newplace" + newlinesNum.toString() + "\" placeholder=\"上课地点\" class=\"form-control\"></td>" +
+            "<td><input name=\"newtime" + newlinesNum.toString() + "\" placeholder=\"上课时间\" class=\"form-control\"></td>" +
+            "<td><input type=\"date\" name=\"newenddate" + newlinesNum.toString() + "\" class=\"form-control\"></td>" +
+            "<td><input name=\"newevameans" + newlinesNum.toString() + "\" placeholder=\"评估方式\" class=\"form-control\"></td>" +
+            "<td><input name=\"newstudyscore" + newlinesNum.toString() + "\" placeholder=\"学分\" class=\"form-control\"></td>" +
+            "<td><select name=\"newdepartid" + newlinesNum.toString() + "\"></td>" +
+            "<td><input name=\"newteacher" + newlinesNum.toString() + "\" placeholder=\"授课教师\" class=\"form-control\"></td>" +
+            "<td><input name=\"newother" + newlinesNum.toString() + "\" placeholder=\"备注\" class=\"form-control\"></td>" +
+            "<td><a href=\"\" name=\"delete" + newlinesNum.toString() + "\" class=\"text-danger\"><i class=\"icon-trash\"></i></a></td></tr>";
         $('#addtable').append(tr);
-        $.getJSON('/stu', function (data) {
+        $.getJSON('/cladepa', function (data) {
             $.each(data, function (i, n) {
                 for (var m = 0; m < n.length; m++) {
                     kkk = "<option value=\"";
@@ -422,7 +487,6 @@
         $('#inputSearchExample2').val("");
         remote.render();
     });
-
     $("#inputSearchExample2").on("input propertychange",
         function () {
             var inputv = $("#inputSearchExample2").val();

@@ -15,8 +15,8 @@
 <script src="/static/zui.datagrid.min.js"></script>
 <script src="/static/zui.tabs.js"></script>
 <div class="container-fluid">
-    <div class="row" id="navig">
-        <div class="col-md-12">
+    <div class="row">
+        <div class="col-md-12" id="navig">
             <nav class="navbar" role="navigation">
                 <div class="container-fluid">
                     <div class="navbar-header">
@@ -42,6 +42,7 @@
                                 <a href="" class="dropdown-toggle" data-toggle="dropdown">学生管理 <b class="caret"></b></a>
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a href="/student">学生管理</a></li>
+                                    <li><a href="/scores">成绩管理</a></li>
                                     <li><a href="/search">学生信息查询</a></li>
                                 </ul>
                             </li>
@@ -51,6 +52,7 @@
                                     <li><a href="/change">学籍变更</a></li>
                                     <li><a href="/reward">奖励情况</a></li>
                                     <li><a href="/punish">处罚情况</a></li>
+                                    <li><a href="/courses">课程管理</a></li>
                                 </ul>
                             </li>
                         </ul>
@@ -61,6 +63,17 @@
     </div>
     <div class="row">
         <div class="col-md-6">
+            <div class="input-control has-label-left">
+                <input id="xthc" type="text" class="form-control" placeholder="">
+                <label for="xthc" class="input-control-label-left">学号</label>
+            </div>
+            <br>
+            <div class="input-control has-label-left">
+                <input id="xkmk" type="text" class="form-control" placeholder="">
+                <label for="xkmk" class="input-control-label-left">姓名</label>
+            </div>
+            <hr>
+            <div id="stuCard"></div>
         </div>
         <div class="col-md-6">
             <div class="tabs" id="searchTab" style="height:0px;padding-bottom: 100%"></div>
@@ -70,22 +83,230 @@
 <script>
     $('#searchTab').tabs({
         tabs: [{
+            id: 'changeTab',
             title: '学籍变更',
-            url: '/static/changes.html',
-            type: 'iframe',
-            forbidClose: true
+            type: 'custom',
+            forbidClose: true,
+            content: function () {
+                return '<div id="remotechange" class="datagrid">\n' +
+                    '<div class="datagrid-container"></div>\n' +
+                    '<div class="pager"></div>\n' +
+                    '</div>'
+            }
         }, {
+            id: 'rewardTab',
             title: '奖励情况',
-            url: '/static/rewards.html',
-            type: 'iframe',
-            forbidClose: true
+            type: 'custom',
+            forbidClose: true,
+            content: function () {
+                return '<div id="remotereward" class="datagrid">\n' +
+                    '<div class="datagrid-container"></div>\n' +
+                    '<div class="pager"></div>\n' +
+                    '</div>'
+            }
         }, {
+            id: 'punishTab',
             title: '处罚情况',
-            url: '/static/punishes.html',
-            type: 'iframe',
-            forbidClose: true
+            type: 'custom',
+            forbidClose: true,
+            content: function () {
+                return '<div id="remotepunish" class="datagrid">\n' +
+                    '<div class="datagrid-container"></div>\n' +
+                    '<div class="pager"></div>\n' +
+                    '</div>'
+            }
+        }, {
+            id: 'punishTab',
+            title: '学习成绩',
+            type: 'custom',
+            forbidClose: true,
+            content: function () {
+                return '<div id="remotescore" class="datagrid">\n' +
+                    '<div class="datagrid-container"></div>\n' +
+                    '<div class="pager"></div>\n' +
+                    '</div>'
+            }
         }]
     });
+    var searchTabs = $('#searchTab').data('zui.tabs');
+
+    function loadchange() {
+        $('#remotechange').datagrid({
+            states: {
+                pager: {page: 1}
+            },
+            dataSource: {
+                cols: [
+                    {name: 'studentid', label: '学号', width: 0.3},
+                    {name: 'changess', label: '变更类型', width: 0.3},
+                    {name: 'recdate', label: '变更日期', width: 0.3},
+                ],
+                remote: function () {
+                    return {
+                        url: '/changedatainsearch',
+                        type: 'GET',
+                        dataType: 'json'
+                    };
+                }
+            },
+            sortable: true,
+            checkable: true,
+            selectable: true,
+            checkByClickRow: true,
+        });
+    }
+
+    function loadreward() {
+        $('#remotereward').datagrid({
+            states: {
+                pager: {page: 1}
+            },
+            dataSource: {
+                cols: [
+                    {name: 'studentid', label: '学号', width: 0.3},
+                    {name: 'reward', label: '奖励类型', width: 0.3},
+                    {name: 'recdate', label: '奖励日期', width: 0.3},
+                ],
+                remote: function () {
+                    return {
+                        url: '/rewarddatainsearch',
+                        type: 'GET',
+                        dataType: 'json'
+                    };
+                }
+            },
+            sortable: true,
+            checkable: true,
+            selectable: true,
+            checkByClickRow: true,
+        });
+    }
+
+    function loadpunish() {
+        $('#remotepunish').datagrid({
+            states: {
+                pager: {page: 1}
+            },
+            dataSource: {
+                cols: [
+                    {name: 'studentid', label: '学号', width: 0.3},
+                    {name: 'punish', label: '处罚类型', width: 0.3},
+                    {name: 'recdate', label: '处罚日期', width: 0.3},
+                ],
+                remote: function () {
+                    return {
+                        url: '/punishdatainsearch',
+                        type: 'GET',
+                        dataType: 'json'
+                    };
+                }
+            },
+            sortable: true,
+            checkable: true,
+            selectable: true,
+            checkByClickRow: true,
+        });
+    }
+
+    loadchange();
+
+    $('#searchTab').on('onOpen', function (tab) {
+        var ActiveTab = searchTabs.getActiveTab();
+        if (ActiveTab.id === 'changeTab') {
+            loadchange();
+            var remotechange = $('#remotechange').data('zui.datagrid');
+            remotechange.setSearch($("#xthc").val() + ";" + $("#xkmk").val() + ";");
+        }
+        else {
+            if (ActiveTab.id === 'rewardTab') {
+                loadreward();
+                var remotereward = $('#remotereward').data('zui.datagrid');
+                remotereward.setSearch($("#xthc").val() + ";" + $("#xkmk").val() + ";");
+            }
+            else {
+                if (ActiveTab.id === 'punishTab') {
+                    loadpunish();
+                    var remotepunish = $('#remotepunish').data('zui.datagrid');
+                    remotepunish.setSearch($("#xthc").val() + ";" + $("#xkmk").val() + ";");
+                }
+            }
+        }
+    });
+    $("#xthc").on('input propertychange', function () {
+        var ActiveTab = searchTabs.getActiveTab();
+        searchTabs.reload(ActiveTab);
+        if (ActiveTab.id === 'changeTab') {
+            loadchange();
+            var remotechange = $('#remotechange').data('zui.datagrid');
+            remotechange.setSearch($("#xthc").val() + ";" + $("#xkmk").val() + ";");
+        }
+        else {
+            if (ActiveTab.id === 'rewardTab') {
+                loadreward();
+                var remotereward = $('#remotereward').data('zui.datagrid');
+                remotereward.setSearch($("#xthc").val() + ";" + $("#xkmk").val() + ";");
+            }
+            else {
+                if (ActiveTab.id === 'punishTab') {
+                    loadpunish();
+                    var remotepunish = $('#remotepunish').data('zui.datagrid');
+                    remotepunish.setSearch($("#xthc").val() + ";" + $("#xkmk").val() + ";");
+                }
+            }
+        }
+        jsongetstuinfor();
+    });
+    $("#xkmk").on('input propertychange', function () {
+        var ActiveTab = searchTabs.getActiveTab();
+        searchTabs.reload(ActiveTab);
+        if (ActiveTab.id === 'changeTab') {
+            loadchange();
+            var remotechange = $('#remotechange').data('zui.datagrid');
+            remotechange.setSearch($("#xthc").val() + ";" + $("#xkmk").val() + ";");
+        }
+        else {
+            if (ActiveTab.id === 'rewardTab') {
+                loadreward();
+                var remotereward = $('#remotereward').data('zui.datagrid');
+                remotereward.setSearch($("#xthc").val() + ";" + $("#xkmk").val() + ";");
+            }
+            else {
+                if (ActiveTab.id === 'punishTab') {
+                    loadpunish();
+                    var remotepunish = $('#remotepunish').data('zui.datagrid');
+                    remotepunish.setSearch($("#xthc").val() + ";" + $("#xkmk").val() + ";");
+                }
+            }
+        }
+        jsongetstuinfor();
+    });
+
+    function jsongetstuinfor() {
+        $.getJSON('/stuinfor?searchxthc=' + $("#xthc").val() + '&searchxkmk=' + $("#xkmk").val(), function (data) {
+            str = "<div class=\"cards\">";
+            $.each(data, function (i, n) {
+                str +=
+                    "  <div class=\"col-md-4\">" +
+                    "    <div class=\"card\">" +
+                    "      <div class=\"card-heading\"><font color=\"#145CCD\"><strong>" + n.name + "</strong></font></div>" +
+                    "      <div class=\"card-content text-muted\">" +
+                    n.sex +
+                    "<br>" +
+                    "学号: " + n.studentid +
+                    "<br>" +
+                    "生日: " + n.birthday +
+                    "<br>" +
+                    "籍贯: " + n.native +
+                    "      </div>" +
+                    "    </div>" +
+                    "  </div>";
+            });
+            str += "</div>";
+            $("#stuCard").empty();
+            $("#stuCard").append(str);
+        });
+    };
+    jsongetstuinfor();
 </script>
 </body>
 </html>

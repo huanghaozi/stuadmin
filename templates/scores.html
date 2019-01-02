@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>奖励情况</title>
+    <title>学籍变更</title>
     <link href="/static/zui.min.css" rel="stylesheet">
     <link href="/static/zui.datagrid.min.css" rel="stylesheet">
 </head>
@@ -13,6 +13,7 @@
 <script src="/static/zui.min.js"></script>
 <script src="/static/zui.datagrid.min.js"></script>
 <script src="/static/gaoliang.js"></script>
+<script src="/static/zui.selectable.min.js"></script>
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12" id="navig">
@@ -26,7 +27,7 @@
                             <span class="navbar-inverse icon-bar"></span>
                             <span class="navbar-inverse icon-bar"></span>
                         </button>
-                        <a class="navbar-brand" href="/reward">奖励情况</a>
+                        <a class="navbar-brand" href="/scores">成绩管理</a>
                     </div>
                     <div class="collapse navbar-collapse navbar-collapse-example">
                         <ul class="nav navbar-nav">
@@ -103,7 +104,7 @@
 <div class="modal fade" id="insertDialog">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <form class="form-horizontal" action="/reward" method="POST">
+            <form class="form-horizontal" action="/scores" method="POST">
                 <input style="display: none;" id="numi" name="numi">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span
@@ -132,8 +133,8 @@
                         <tr>
                             <th>#</th>
                             <th>学号</th>
-                            <th>奖励类型</th>
-                            <th>奖励日期</th>
+                            <th>课程编号</th>
+                            <th>分数</th>
                             <th></th>
                         </tr>
                         </thead>
@@ -141,7 +142,7 @@
                         <tr>
                             <td>1</td>
                             <td><select name="newstudentid1"></select></td>
-                            <td><input name="newrewardtype1" class="form-control"></td>
+                            <td><input name="newchangetype1" class="form-control"></td>
                             <td><input type="date" name="newrecdate1" class="form-control"></td>
                             <td><a href="" id="delete1" class="text-danger"><i class="icon-trash"></i></a></td>
                         </tr>
@@ -160,7 +161,7 @@
 <div class="modal fade" id="modifyDialog">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <form class="form-horizontal" action="/reward" method="POST">
+            <form class="form-horizontal" action="/scores" method="POST">
                 <input style="display: none;" id="posttype2" name="posttype">
                 <input style="display: none;" id="numj" name="numj">
                 <div class="modal-header">
@@ -172,10 +173,11 @@
                     <table class="modifytable">
                         <thead>
                         <tr>
-                            <th>编号</th>
+                            <th>原学号</th>
+                            <th>原课程编号</th>
                             <th>学号</th>
-                            <th>奖励类型</th>
-                            <th>奖励日期</th>
+                            <th>课程编号</th>
+                            <th>分数</th>
                         </tr>
                         </thead>
                         <tbody id="modifieddata">
@@ -194,7 +196,7 @@
 <div class="modal fade" id="deleteDialog">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <form class="form-horizontal" action="/reward" method="POST">
+            <form class="form-horizontal" action="/scores" method="POST">
                 <input style="display: none;" id="numk" name="numk">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span
@@ -246,21 +248,17 @@
         },
         dataSource: {
             cols: [
-                {name: 'rid', label: '编号', width: 0.1},
                 {name: 'studentid', label: '学号', width: 0.3},
-                {name: 'reward', label: '奖励类型', width: 0.3},
-                {name: 'recdate', label: '奖励日期', width: 0.3},
+                {name: 'courseid', label: '课程编号', width: 0.3},
+                {name: 'score', label: '分数', width: 0.3},
             ],
             remote: function () {
                 return {
-                    url: '/rewarddata',
+                    url: '/scoresdata',
                     type: 'GET',
                     dataType: 'json'
                 };
             }
-        },
-        states: {
-            pager: {page: 1, recPerPage: 20}
         },
         height: window.innerHeight - document.getElementById("navig").clientHeight - 97,
         sortable: true,
@@ -268,14 +266,14 @@
         selectable: true,
         checkByClickRow: true,
     });
+
     var kkk;
     $('#selectedRows').datagrid({
         dataSource: {
             cols: [
-                {name: 'rid', label: '编号', width: 0.1},
                 {name: 'studentid', label: '学号', width: 0.3},
-                {name: 'reward', label: '奖励类型', width: 0.3},
-                {name: 'recdate', label: '奖励日期', width: 0.3},
+                {name: 'courseid', label: '课程编号', width: 0.3},
+                {name: 'score', label: '分数', width: 0.3},
             ],
             array: []
         },
@@ -284,10 +282,9 @@
     $('#selectedRows2').datagrid({
         dataSource: {
             cols: [
-                {name: 'rid', label: '编号', width: 0.1},
                 {name: 'studentid', label: '学号', width: 0.3},
-                {name: 'reward', label: '奖励类型', width: 0.3},
-                {name: 'recdate', label: '奖励日期', width: 0.3},
+                {name: 'courseid', label: '课程编号', width: 0.3},
+                {name: 'score', label: '分数', width: 0.3},
             ],
             array: []
         },
@@ -307,10 +304,9 @@
         else {
             selectedRows = {
                 cols: [
-                    {name: 'rid', label: '编号', width: 0.1},
                     {name: 'studentid', label: '学号', width: 0.3},
-                    {name: 'reward', label: '奖励类型', width: 0.3},
-                    {name: 'recdate', label: '奖励日期', width: 0.3},
+                    {name: 'courseid', label: '课程编号', width: 0.3},
+                    {name: 'score', label: '分数', width: 0.3},
                 ],
                 array: selectedRowsData,
             };
@@ -341,10 +337,9 @@
             var keys = "";
             selectedRows = {
                 cols: [
-                    {name: 'rid', label: '编号', width: 0.1},
                     {name: 'studentid', label: '学号', width: 0.3},
-                    {name: 'reward', label: '奖励类型', width: 0.3},
-                    {name: 'recdate', label: '奖励日期', width: 0.3},
+                    {name: 'courseid', label: '课程编号', width: 0.3},
+                    {name: 'score', label: '分数', width: 0.3},
                 ],
                 array: selectedRowsData,
             };
@@ -352,7 +347,7 @@
             $('#posttype3').val("delete");
             $('#numk').val(selectedRowsData.length.toString());
             for (var i = 0; i < selectedRowsData.length; i++) {
-                keys += selectedRowsData[i].rid + " ";
+                keys += selectedRowsData[i].cid + " ";
             }
             $('#deletekeys').val(keys);
             $("#deleteDialog").modal('toggle', 'center');
@@ -371,10 +366,10 @@
             var str;
             for (var i = 0; i < selectedRowsData.length; i++) {
                 str = "";
-                str += "<tr><td><input readonly=\"readonly\" name=\"rid" + i.toString() + "\" value=\"" + selectedRowsData[i].rid + "\" class=\"form-control\"></td>";
-                str += "<td><select name=\"modstudentid" + selectedRowsData[i].rid + "\"></td>";
-                str += "<td><input name=\"modrewardtype" + selectedRowsData[i].rid + "\" value=\"" + selectedRowsData[i].reward + "\" class=\"form-control\"></td>";
-                str += "<td><input type=\"date\" name=\"modrecdate" + selectedRowsData[i].rid + "\" value=\"" + selectedRowsData[i].recdate + "\" class=\"form-control\"></td></tr>";
+                str += "<tr><td><input readonly=\"readonly\" name=\"cid" + i.toString() + "\" value=\"" + selectedRowsData[i].cid + "\" class=\"form-control\"></td>";
+                str += "<td><select name=\"modstudentid" + selectedRowsData[i].cid + "\"></td>";
+                str += "<td><input name=\"modchangetype" + selectedRowsData[i].cid + "\" value=\"" + selectedRowsData[i].changess + "\" class=\"form-control\"></td>";
+                str += "<td><input type=\"date\" name=\"modrecdate" + selectedRowsData[i].cid + "\" value=\"" + selectedRowsData[i].recdate + "\" class=\"form-control\"></td></tr>";
                 $("#modifieddata").append(str);
                 $.getJSON('/stu', function (data) {
                     $.each(data, function (index, n) {
@@ -403,7 +398,7 @@
         newlinesNum += 1;
         var tr = "<tr><td>" + newlinesNum.toString() + "</td>" +
             "<td><select name=\"newstudentid" + newlinesNum.toString() + "\"></td>" +
-            "<td><input name=\"newrewardtype" + newlinesNum.toString() + "\" placeholder=\"姓名\" class=\"form-control\"></td>" +
+            "<td><input name=\"newchangetype" + newlinesNum.toString() + "\" placeholder=\"姓名\" class=\"form-control\"></td>" +
             "<td><input type=\"date\" name=\"newrecdate" + newlinesNum.toString() + "\" placeholder=\"性别\" class=\"form-control\"></td></tr>";
         $('#addtable').append(tr);
         $.getJSON('/stu', function (data) {
