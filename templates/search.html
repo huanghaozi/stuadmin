@@ -14,6 +14,7 @@
 <script src="/static/zui.min.js"></script>
 <script src="/static/zui.datagrid.min.js"></script>
 <script src="/static/zui.tabs.js"></script>
+<script src="/static/gaoliang.js"></script>
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12" id="navig">
@@ -338,9 +339,9 @@
                     "      <div class=\"card-heading\"><font color=\"#145CCD\"><strong>" + n.name + "</strong></font></div>" +
                     "      <div class=\"card-content text-muted\">" +
                     n.sex +
-                    "<br>" +
+                    "<br><font color=\"#9b59b6\">" +
                     "学号: " + n.studentid +
-                    "<br>" +
+                    "</font><br>" +
                     "生日: " + n.birthday +
                     "<br>" +
                     "籍贯: " + n.native +
@@ -352,7 +353,7 @@
             $("#stuCard").empty();
             $("#stuCard").append(str);
         });
-    };
+    }
     jsongetstuinfor();
 </script>
 </body>
