@@ -911,6 +911,22 @@ def rewarddatainsearch():
          "pager": {"page": page, "recTotal": recTotal, "recPerPage": recPerPage, "sortBy": sortBy, "order": order}},
         cls=dateJsonEncoder)
 
+
+@app.route('/scoredatainsearch', methods=['GET'], endpoint='scoredatainsearch')
+@auth
+def scoredatainsearch():
+    sortBy = request.args.get('sortBy')
+    order = request.args.get('order')
+    search = request.args.get('search')
+    datas = db.searchTable(pool, 'scores', ['studentid', 'courseid', 'score'], sortBy, order, search)
+    page = int(request.args.get('page'))
+    recPerPage = int(request.args.get('recPerPage'))
+    recTotal = len(datas)
+    return json.dumps(
+        {"result": "success", "data": datas[(page - 1) * recPerPage:page * recPerPage], "message": "未知错误",
+         "pager": {"page": page, "recTotal": recTotal, "recPerPage": recPerPage, "sortBy": sortBy, "order": order}},
+        cls=dateJsonEncoder)
+
 @app.route('/rewarddata', methods=['GET'], endpoint='rewarddata')
 @auth
 def rewarddata():

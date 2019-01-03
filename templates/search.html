@@ -115,6 +115,17 @@
                     '<div class="pager"></div>\n' +
                     '</div>'
             }
+        }, {
+            id: 'scoreTab',
+            title: '课程成绩',
+            type: 'custom',
+            forbidClose: true,
+            content: function () {
+                return '<div id="remotescore" class="datagrid">\n' +
+                    '<div class="datagrid-container"></div>\n' +
+                    '<div class="pager"></div>\n' +
+                    '</div>'
+            }
         }]
     });
     var searchTabs = $('#searchTab').data('zui.tabs');
@@ -197,6 +208,32 @@
         });
     }
 
+    function loadscore() {
+        $('#remotescore').datagrid({
+            states: {
+                pager: {page: 1}
+            },
+            dataSource: {
+                cols: [
+                    {name: 'studentid', label: '学号', width: 0.3},
+                    {name: 'courseid', label: '课程编号', width: 0.3},
+                    {name: 'score', label: '分数', width: 0.3},
+                ],
+                remote: function () {
+                    return {
+                        url: '/scoredatainsearch',
+                        type: 'GET',
+                        dataType: 'json'
+                    };
+                }
+            },
+            sortable: true,
+            checkable: true,
+            selectable: true,
+            checkByClickRow: true,
+        });
+    }
+
     loadchange();
 
     $('#searchTab').on('onOpen', function (tab) {
@@ -217,6 +254,13 @@
                     loadpunish();
                     var remotepunish = $('#remotepunish').data('zui.datagrid');
                     remotepunish.setSearch($("#xthc").val() + ";" + $("#xkmk").val() + ";");
+                }
+                else {
+                    if (ActiveTab.id === 'scoreTab') {
+                        loadscore();
+                        var remotescore = $('#remotescore').data('zui.datagrid');
+                        remotescore.setSearch($("#xthc").val() + ";" + $("#xkmk").val() + ";");
+                    }
                 }
             }
         }
@@ -241,6 +285,13 @@
                     var remotepunish = $('#remotepunish').data('zui.datagrid');
                     remotepunish.setSearch($("#xthc").val() + ";" + $("#xkmk").val() + ";");
                 }
+                else {
+                    if (ActiveTab.id === 'scoreTab') {
+                        loadscore();
+                        var remotescore = $('#remotescore').data('zui.datagrid');
+                        remotescore.setSearch($("#xthc").val() + ";" + $("#xkmk").val() + ";");
+                    }
+                }
             }
         }
         jsongetstuinfor();
@@ -264,6 +315,13 @@
                     loadpunish();
                     var remotepunish = $('#remotepunish').data('zui.datagrid');
                     remotepunish.setSearch($("#xthc").val() + ";" + $("#xkmk").val() + ";");
+                }
+                else {
+                    if (ActiveTab.id === 'scoreTab') {
+                        loadscore();
+                        var remotescore = $('#remotescore').data('zui.datagrid');
+                        remotescore.setSearch($("#xthc").val() + ";" + $("#xkmk").val() + ";");
+                    }
                 }
             }
         }
