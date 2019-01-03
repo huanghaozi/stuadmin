@@ -227,7 +227,26 @@ def modifyTable(pool, tableName, setDatas, pjdrtnjm):
 
 
 def deletekeys(pool, tableName, keys, keystnjm):
-    str = "delete from %s where %s=%s" % (tableName, keys, keystnjm)
+    str = "delete from %s where %s=%s;" % (tableName, keys, keystnjm)
+    try:
+        database = pool.connection()
+        database.ping(reconnect=True)
+        cursor = database.cursor()
+    except:
+        return False
+    try:
+        cursor.execute(str)
+        database.commit()
+        cursor.close()
+        database.close()
+        return True
+    except:
+        database.rollback()
+        return False
+
+
+def deletekeys2(pool, tableName, keys1, keystnjm1, keys2, keystnjm2):
+    str = "delete from %s where %s=%s and %s=%s;" % (tableName, keys1, keystnjm1, keys2, keystnjm2)
     try:
         database = pool.connection()
         database.ping(reconnect=True)

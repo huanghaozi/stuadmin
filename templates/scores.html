@@ -141,9 +141,9 @@
                         <tbody id="addtable">
                         <tr>
                             <td>1</td>
-                            <td><select name="newstudentid1"></select></td>
-                            <td><input name="newchangetype1" class="form-control"></td>
-                            <td><input type="date" name="newrecdate1" class="form-control"></td>
+                            <td><select id="mmodstu1" name="newstudentid1"></select></td>
+                            <td><select id="mmodcou1" name="newcourseid1"></td>
+                            <td><input name="newscore1" class="form-control" placeholder="分数"></td>
                             <td><a href="" id="delete1" class="text-danger"><i class="icon-trash"></i></a></td>
                         </tr>
                         </tbody>
@@ -314,11 +314,20 @@
             $("#dvvc").show();
         }
         $.getJSON('/stu', function (data) {
-            $.each(data, function (i, n) {
+            $.each(data, function (index, n) {
                 for (var m = 0; m < n.length; m++) {
                     kkk = "<option value=\"";
                     kkk += n[m] + "\">" + n[m] + "</option>";
-                    $("select").append(kkk);
+                    $("select[id^='mmodstu']").append(kkk);
+                }
+            });
+        });
+        $.getJSON('/cou', function (data) {
+            $.each(data, function (index, n) {
+                for (var m = 0; m < n.length; m++) {
+                    kkk = "<option value=\"";
+                    kkk += n[m] + "\">" + n[m] + "</option>";
+                    $("select[id^='mmodcou']").append(kkk);
                 }
             });
         });
@@ -347,7 +356,7 @@
             $('#posttype3').val("delete");
             $('#numk').val(selectedRowsData.length.toString());
             for (var i = 0; i < selectedRowsData.length; i++) {
-                keys += selectedRowsData[i].cid + " ";
+                keys += selectedRowsData[i].studentid + ";" + selectedRowsData[i].courseid + " ";
             }
             $('#deletekeys').val(keys);
             $("#deleteDialog").modal('toggle', 'center');
@@ -366,10 +375,11 @@
             var str;
             for (var i = 0; i < selectedRowsData.length; i++) {
                 str = "";
-                str += "<tr><td><input readonly=\"readonly\" name=\"cid" + i.toString() + "\" value=\"" + selectedRowsData[i].cid + "\" class=\"form-control\"></td>";
-                str += "<td><select name=\"modstudentid" + selectedRowsData[i].cid + "\"></td>";
-                str += "<td><input name=\"modchangetype" + selectedRowsData[i].cid + "\" value=\"" + selectedRowsData[i].changess + "\" class=\"form-control\"></td>";
-                str += "<td><input type=\"date\" name=\"modrecdate" + selectedRowsData[i].cid + "\" value=\"" + selectedRowsData[i].recdate + "\" class=\"form-control\"></td></tr>";
+                str += "<tr><td><input readonly=\"readonly\" name=\"studentid" + i.toString() + "\" value=\"" + selectedRowsData[i].studentid + "\" class=\"form-control\"></td>";
+                str += "<td><input readonly=\"readonly\" name=\"courseid" + i.toString() + "\" value=\"" + selectedRowsData[i].courseid + "\" class=\"form-control\"></td>";
+                str += "<td><select id=\"nmodstu" + i.toString() + "\" name=\"modstudentid" + selectedRowsData[i].courseid + selectedRowsData[i].studentid + "\"></td>";
+                str += "<td><select id=\"nmodcou" + i.toString() + "\" name=\"modcourseid" + selectedRowsData[i].courseid + selectedRowsData[i].studentid + "\"></td>";
+                str += "<td><input name=\"modscore" + selectedRowsData[i].courseid + selectedRowsData[i].studentid + "\" value=\"" + selectedRowsData[i].score + "\" class=\"form-control\"></td></tr>";
                 $("#modifieddata").append(str);
                 $.getJSON('/stu', function (data) {
                     $.each(data, function (index, n) {
@@ -382,7 +392,22 @@
                                 kkk = "<option value=\"";
                                 kkk += n[m] + "\">" + n[m] + "</option>";
                             }
-                            $("select").append(kkk);
+                            $("select[id^='nmodstu']").append(kkk);
+                        }
+                    });
+                });
+                $.getJSON('/cou', function (data) {
+                    $.each(data, function (index, n) {
+                        for (var m = 0; m < n.length; m++) {
+                            if (n[m] === selectedRowsData[i - 1].courseid) {
+                                kkk = "<option selected value=\"";
+                                kkk += n[m] + "\">" + n[m] + "</option>";
+                            }
+                            else {
+                                kkk = "<option value=\"";
+                                kkk += n[m] + "\">" + n[m] + "</option>";
+                            }
+                            $("select[id^='nmodcou']").append(kkk);
                         }
                     });
                 });
@@ -397,16 +422,25 @@
     $("#addLine").click(function () {
         newlinesNum += 1;
         var tr = "<tr><td>" + newlinesNum.toString() + "</td>" +
-            "<td><select name=\"newstudentid" + newlinesNum.toString() + "\"></td>" +
-            "<td><input name=\"newchangetype" + newlinesNum.toString() + "\" placeholder=\"姓名\" class=\"form-control\"></td>" +
-            "<td><input type=\"date\" name=\"newrecdate" + newlinesNum.toString() + "\" placeholder=\"性别\" class=\"form-control\"></td></tr>";
+            "<td><select id=\"mmodstu" + newlinesNum.toString() + "\" name=\"newstudentid" + newlinesNum.toString() + "\"></td>" +
+            "<td><select id=\"mmodcou" + newlinesNum.toString() + "\" name=\"newcourseid" + newlinesNum.toString() + "\"></td>" +
+            "<td><input name=\"newscore" + newlinesNum.toString() + "\" placeholder=\"分数\" class=\"form-control\"></td></tr>";
         $('#addtable').append(tr);
         $.getJSON('/stu', function (data) {
-            $.each(data, function (i, n) {
+            $.each(data, function (index, n) {
                 for (var m = 0; m < n.length; m++) {
                     kkk = "<option value=\"";
                     kkk += n[m] + "\">" + n[m] + "</option>";
-                    $("select").append(kkk);
+                    $("select[id^='mmodstu']").append(kkk);
+                }
+            });
+        });
+        $.getJSON('/cou', function (data) {
+            $.each(data, function (index, n) {
+                for (var m = 0; m < n.length; m++) {
+                    kkk = "<option value=\"";
+                    kkk += n[m] + "\">" + n[m] + "</option>";
+                    $("select[id^='mmodcou']").append(kkk);
                 }
             });
         });

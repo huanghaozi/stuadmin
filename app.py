@@ -482,6 +482,73 @@ def change():
             return render_template('change.html', deletesuccessednum=str(l),
                                    deleteunsuccessednum=str(int(numk) - l))
 
+
+@app.route('/scores', methods=['GET', 'POST'], endpoint='scores')
+@auth
+def scores():
+    if request.method == 'GET':
+        return render_template('scores.html')
+    else:
+        if request.form.get('posttype') == 'insert':
+            numi = request.form.get('numi')
+            newstudentid = []
+            newcourseid = []
+            newscores = []
+            newdatasets = "("
+            for i in range(int(numi)):
+                newstudentid.append(request.form.get('newstudentid' + str(i + 1)))
+                newcourseid.append(request.form.get('newcourseid' + str(i + 1)))
+                newscores.append(request.form.get('newscore' + str(i + 1)))
+            for i in range(int(numi)):
+                newdatasets += '"' + newstudentid[i] + '",'
+                newdatasets += '"' + newcourseid[i] + '",'
+                newdatasets += '"' + newscores[i] + '"'
+                newdatasets += '),('
+            newdatasets = newdatasets[:-2] + ';'
+            insertsuccess = db.insertTable(pool, "scores(studentid,courseid,score)",
+                                           newdatasets)
+            if insertsuccess == True:
+                return render_template('scores.html', inserterror="False")
+            else:
+                return render_template('scores.html', inserterror="True")
+        elif request.form.get('posttype') == 'modify':
+            numj = request.form.get('numj')
+            k = 0
+            studentid = []
+            courseid = []
+            modstudentid = []
+            modcourseid = []
+            modscore = []
+            for i in range(int(numj)):
+                studentid.append(request.form.get('studentid' + str(i)))
+                courseid.append(request.form.get('courseid' + str(i)))
+                modstudentid.append(request.form.get('modstudentid' + courseid[i] + studentid[i]))
+                modcourseid.append(request.form.get('modcourseid' + courseid[i] + studentid[i]))
+                modscore.append(request.form.get('modscore' + courseid[i] + studentid[i]))
+            for i in range(int(numj)):
+                modstudentdata = ""
+                modstudentdata += 'studentid="' + modstudentid[i] + '"'
+                modstudentdata += ',courseid="' + modcourseid[i] + '"'
+                modstudentdata += ',score="' + modscore[i] + '"'
+                pjdr = 'studentid="' + studentid[i] + '"' + 'and ' + 'courseid="' + courseid[i] + '"'
+                modiifysuccess = db.modifyTable(pool, "scores", modstudentdata, pjdr)
+                if modiifysuccess == True:
+                    k += 1
+            return render_template('scores.html', modifysuccessednum=str(k),
+                                   modifyunsuccessednum=str(int(numj) - k))
+        elif request.form.get('posttype') == 'delete':
+            numk = request.form.get('numk')
+            l = 0
+            strdeletedepartids = request.form.get('deletekeys')
+            deletekeys = strdeletedepartids.split(' ')
+            for i in range(int(numk)):
+                deletesuccess = db.deletekeys2(pool, 'scores', 'studentid', '"' + deletekeys[i].split(";")[0] + '"',
+                                               'courseid', '"' + deletekeys[i].split(";")[1] + '"')
+                if deletesuccess == True:
+                    l += 1
+            return render_template('scores.html', deletesuccessednum=str(l),
+                                   deleteunsuccessednum=str(int(numk) - l))
+
 @app.route('/static/changes.html', methods=['GET', 'POST'], endpoint='changesiframe')
 @auth
 def changesiframe():
@@ -658,6 +725,17 @@ def stu():
     return jsonstr
 
 
+@app.route('/cou', methods=['GET'], endpoint='cou')
+@auth
+def cou():
+    datas = db.getTable(pool, 'courses', ['courseid'])
+    noparsejson = {"courseid": []}
+    for i in range(len(datas)):
+        noparsejson["courseid"].append(datas[i]["courseid"])
+    jsonstr = json.dumps(noparsejson)
+    return jsonstr
+
+
 @app.route('/stuinfor', methods=['GET'], endpoint='stuinfor')
 @auth
 def stuinfor():
@@ -760,6 +838,23 @@ def coursesdata():
     datas = db.getTable(pool, 'courses',
                         ['courseid', 'coursename', 'begindate', 'place', 'time', 'enddate', 'evameans', 'studyscore',
                          'departid', 'teacher', 'other'], sortBy, order, search)
+    page = int(request.args.get('page'))
+    recPerPage = int(request.args.get('recPerPage'))
+    recTotal = len(datas)
+    return json.dumps(
+        {"result": "success", "data": datas[(page - 1) * recPerPage:page * recPerPage], "message": "未知错误",
+         "pager": {"page": page, "recTotal": recTotal, "recPerPage": recPerPage, "sortBy": sortBy, "order": order}},
+        cls=dateJsonEncoder)
+
+
+@app.route('/scoresdata', methods=['GET'], endpoint='scoresdata')
+@auth
+def scoresdata():
+    sortBy = request.args.get('sortBy')
+    order = request.args.get('order')
+    search = request.args.get('search')
+    datas = db.getTable(pool, 'scores',
+                        ['studentid', 'courseid', 'score'], sortBy, order, search)
     page = int(request.args.get('page'))
     recPerPage = int(request.args.get('recPerPage'))
     recTotal = len(datas)
